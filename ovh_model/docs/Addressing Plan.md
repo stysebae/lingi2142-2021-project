@@ -6,13 +6,14 @@
 
 - Each city has its own subnet
 - 10.0.0.0 range for the most flexibility (instead of 192.168.0.0 range), because it allows a lot of hosts in the same range
-- 2097150 (2^21-2) IPv4 addresses with a /11 mask and 1048574 (2^20-2) loopback addresses: 1048574 IPv4 addresses left for routers and hosts and 2046 subnets
+- 256 IPv4 addresses with a /16 mask (the firt byte is set, we can't change it) and 65024 (254 x 256) host addresses
+- The first 2540 IPv4 addresses of each subnet are reserved for the loopback addresses of the routers (from 10.xxx.0.1 to 10.xxx.9.254, up to 10.xxx.10.0)
 
 | Location   	| IP Addresses range 	| Loopbacks Addresses 	|
 |------------	|--------------------	|---------------------	|
-| Frankfurt  	| 10.0.0.0/11       	| 10.0.0.0/12        	|
-| Roubaix    	| 10.32.0.0/11      	| 10.32.0.0/12       	|
-| Strasbourg 	| 10.64.0.0/11      	| 10.64.0.0/12       	|
-| Paris      	| 10.96.0.0/11      	| 10.96.0.0/12       	|
+| Frankfurt  	| 10.10.0.0/16       	| Up to 10.10.9.254   	|
+| Roubaix    	| 10.11.0.0/16      	| Up to 10.11.9.254   	|
+| Strasbourg 	| 10.12.0.0/16      	| Up to 10.12.9.254   	|
+| Paris      	| 10.13.0.0/16      	| Up to 10.13.9.254   	|
 
 ## IPv6
