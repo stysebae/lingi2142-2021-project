@@ -53,6 +53,12 @@ class OVHTopology(IPTopo):
         self.addLink(ovh_r12, cogent_r1)
         self.addLink(ovh_r12, level3_r1)
 
+        # Setup the AS's
+        self.addAS(1, (ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r7, ovh_r8, ovh_r9, ovh_r10, ovh_r11, ovh_r12))
+        self.addAS(2, (telia_r1))
+        self.addAS(3, (cogent_r1))
+        self.addAS(4, (level3_r1))
+
         super().build(*args, **kwargs)
 
 if __name__ == '__main__':
