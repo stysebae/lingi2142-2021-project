@@ -1,6 +1,7 @@
 # Addressing Plan
 
-(based on [Cisco's IP Addressing Guide](https://www.cisco.com/c/dam/en/us/solutions/collateral/enterprise/design-zone-smart-business-architecture/sba_ipAddr_dg.pdf))
+(based on [Cisco's IPv4 Addressing Guide](https://www.cisco.com/c/dam/en/us/solutions/collateral/enterprise/design-zone-smart-business-architecture/sba_ipAddr_dg.pdf))
+(based on [Cisco's IPv6 Addressing Guide](https://www.cisco.com/c/dam/en/us/solutions/collateral/enterprise/design-zone-government/sbaBN_IPv6addrG.pdf))
 
 ## IPv4
 
@@ -17,3 +18,12 @@
 | Paris      	| 10.13.0.0/16      	| Up to 10.13.9.254   	|
 
 ## IPv6
+
+- Same spirit as for IPv4
+
+| Location   	| IP Addresses range 	|
+|------------	|--------------------	|
+| Frankfurt  	| 2001:a::/64       	|
+| Roubaix    	| 2001:b::/64       	|
+| Strasbourg 	| 2001:c::/64       	|
+| Paris      	| 2001:d::/64       	|
