@@ -5,7 +5,7 @@
 - `nodes`: displays nodes
 - `links` or `net`: displays links
 - `<node|switch|controller> cmd`: executes `cmd` on the specified node (e.g.: `ovh_r1 ifconfig -a`)
-- `<node1> ping -c <node2>`: tests connectivity between `node1` and `node2`
+- `<node1> ping -c x <node2>`: tests connectivity between `node1` and `node2` (where `x` is an integer)
 - `dump`: displays all information about the nodes
 
 ## Connection to FRRouting daemons
