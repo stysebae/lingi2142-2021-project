@@ -38,11 +38,11 @@
 
   | Location           | IP Addresses range    | Loopback Addresses      |
   |--------------------|-----------------------|-------------------------|
-  | *Loopback Addresses* | 2023:a:C::x/128 |                         |
-  | Frankfurt          | 2023:b::/64 | 2023:a:b::x/128 |
-  | Roubaix            | 2023:c::/64 | 2023:a:c::x/128 |
-  | Strasbourg         | 2023:d::/64 | 2023:a:d::x/128 |
-  | Paris              | 2023:e::/64 | 2023:a:e::x/128 |
+  | *Loopback Addresses* | 2023:​​a:C::x/128 |                         |
+  | Frankfurt          | 2023:​b::/64 | 2023:​a:​b::x/128 |
+  | Roubaix            | 2023:​c::/64 | 2023:​a:​c::x/128 |
+  | Strasbourg         | 2023:​d::/64 | 2023:​a:​d::x/128 |
+  | Paris              | 2023:​e::/64 | 2023:​a:​e::x/128 |
 
   where *C* indicates the city (and not the 12 hexadecimal value!) and *x* designates the interface ID.
 
