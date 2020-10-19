@@ -42,6 +42,7 @@ TODO
 - `neighbor <NEIGHBOR_IP> prefix-list <PREFIX_NAME> in`: sets the ingoing filter for the interface
 - `neighbor <NEIGHBOR_IP> prefix-list <PREFIX_NAME> out`: sets the outgoing filter for the interface
 - `neighbor <NEIGHBOR_IP> update-source <INTERFACE_NAME>`: sets the loopback addresss of the neighbor (the interface as to be set previously by : "interface loopback 0 \n ip adress LOOPBACK_IP 255.255.255.255")
+- `neighbor <NEIGHBOR_IP> route-reflector-client`: set the neighbor as a client of ourself (the router who execute this command is then a RR)
 - `set community <COMMUNITY>`: sets the BGP community value
 - `set local-preference <X>`: sets the local-pref on the link
 - `show bgp summary`: outputs a summary of the status of the BGP sessions on the local router.
