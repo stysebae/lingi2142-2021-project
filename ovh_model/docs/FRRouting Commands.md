@@ -34,17 +34,44 @@ The commands listed below assume that you are using FRRouting CLI.
 
 (Commands known via `<node> telnet localhost 2605`)
 
-TODO
+### Enabling
 
-- `router bgp <AS_NBR>`: activates BGP on the router an set his AS number
-- `network <SUBNET_IP/MASK>`: chooses the network on which advertise BGP
+We can enable BGP on each router by the following steps:
+
+- `enable`: enters in EXEC mode (e.g.: `ovh_r1#`)
+- `configure terminal`: enters in global configuration mode
+- `router bgp <AS_NBR>`: activates BGP on the router and set his AS number
+- `network <SUBNET_IP/MASK>` (optional): chooses the network on which advertise BGP
+- `end`: exits router configuration mode
+
+### Configuring a Peer
+
+After the previous steps have been executed (`enable`, `configure terminal` and `router bgp <ASNBR`>), we can configure a BGP peer by these list of steps:
+
 - `neighbor <NEIGHBOR_IP> remote-as <REMOTE_AS_NBR>`: defines the neighbor as a member of remote AS
+- `address-family ipv4`: specifies the IPv4 unicast address family and enters in its configuration mode
+- `neighbor <NEIGHBOR_IP> activate`: enables the neighbor to exchange unicast IPv4 prefixes with its local peer router
+- `end`: exits configuration mode
+
+Other commands:
+
 - `neighbor <NEIGHBOR_IP> prefix-list <PREFIX_NAME> in`: sets the ingoing filter for the interface
 - `neighbor <NEIGHBOR_IP> prefix-list <PREFIX_NAME> out`: sets the outgoing filter for the interface
 - `neighbor <NEIGHBOR_IP> update-source <INTERFACE_NAME>`: sets the loopback addresss of the neighbor (the interface as to be set previously by : "interface loopback 0 \n ip adress LOOPBACK_IP 255.255.255.255")
 - `neighbor <NEIGHBOR_IP> route-reflector-client`: set the neighbor as a client of ourself (the router who execute this command is then a RR)
-- `set community <COMMUNITY>`: sets the BGP community value
+
+### BGP Decision Process
+
+We have to create route maps if we would like to configure BGP decision process. After `enable` and `configure terminal`, type `route-map <MAP_NAME> [permit|deny] [sequence-nbr]` to enter in the route-map configuration mode. There, we could perform these tasks:
+
+- `set ip next-hop <IP_ADDRESS>`: specifies where output packets (that pass a match clause of a route map) will be sent
+- `set metric <X>`: sets a MED value (i.e. the metric value shown in the BGP table)
 - `set local-preference <X>`: sets the local-pref on the link
+
+### Debugging Commands:
+
+- `show bgp community-list`: shows the list of communities.
+- `show bgp nexthop`: shows the BGP nexthop table.
 - `show bgp summary`: outputs a summary of the status of the BGP sessions on the local router.
 
 ## OSPF

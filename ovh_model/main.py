@@ -3,7 +3,7 @@
 from ipmininet.ipnet import IPNet
 from ipmininet.cli import IPCLI
 from ipmininet.iptopo import IPTopo
-from ipmininet.router.config import BGP, RouterConfig, set_rr, ebgp_session, SHARE
+from ipmininet.router.config import OSPF, BGP, RouterConfig, set_rr, ebgp_session, SHARE
 
 class OVHTopology(IPTopo):
     def build(self, *args, **kwargs):
@@ -28,22 +28,38 @@ class OVHTopology(IPTopo):
         cogent_r1 = self.addRouter("cogent_r1")
         level3_r1 = self.addRouter("level3_r1")
 
-        # Adding deamons
+        # Adding daemons
+        ovh_r1.addDaemon(OSPF)
         ovh_r1.addDaemon(BGP)
+        ovh_r2.addDaemon(OSPF)
         ovh_r2.addDaemon(BGP)
+        ovh_r3.addDaemon(OSPF)
         ovh_r3.addDaemon(BGP)
+        ovh_r4.addDaemon(OSPF)
         ovh_r4.addDaemon(BGP)
+        ovh_r5.addDaemon(OSPF)
         ovh_r5.addDaemon(BGP)
+        ovh_r6.addDaemon(OSPF)
         ovh_r6.addDaemon(BGP)
+        ovh_r7.addDaemon(OSPF)
         ovh_r7.addDaemon(BGP)
+        ovh_r8.addDaemon(OSPF)
         ovh_r8.addDaemon(BGP)
+        ovh_r9.addDaemon(OSPF)
         ovh_r9.addDaemon(BGP)
+        ovh_r10.addDaemon(OSPF)
         ovh_r10.addDaemon(BGP)
+        ovh_r11.addDaemon(OSPF)
         ovh_r11.addDaemon(BGP)
+        ovh_r12.addDaemon(OSPF)
         ovh_r12.addDaemon(BGP)
+        telia_r1.addDaemon(OSPF)
         telia_r1.addDaemon(BGP)
-        google_r1.addDaemon(BGP)
+        google_r1.addDaemon(OSPF)
+        google_r1.addDaemon(OSPF)
+        cogent_r1.addDaemon(OSPF)
         cogent_r1.addDaemon(BGP)
+        level3_r1.addDaemon(OSPF)
         level3_r1.addDaemon(BGP)
 
         # Adding links
@@ -82,7 +98,7 @@ class OVHTopology(IPTopo):
         self.addAS(4, (level3_r1,))
         self.addAS(5, (google_r1,))
 
-        # Configure the RR
+        # Configure the RRs
         set_rr(self, rr=ovh_r7, peers=[ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r8, ovh_r9, ovh_r10, ovh_r11, ovh_r12])
         set_rr(self, rr=ovh_r8, peers=[ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r7, ovh_r9, ovh_r10, ovh_r11, ovh_r12])
 
