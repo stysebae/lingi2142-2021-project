@@ -14,7 +14,7 @@ import ipmininet
 from ipmininet.cli import IPCLI
 from ipmininet.ipnet import IPNet
 from ipmininet.iptopo import IPTopo
-from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6
+from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6, AccessList
 
 # CONSTANT VALUES
 
@@ -43,6 +43,7 @@ class OVHTopology(IPTopo):
         reflectors, etc.
         """
         # Adding routers
+        # r1 = self.addRouter('r1', lo_addresses=["2042:1::1/64", "10.1.1.1/24"])
         ovh_r1 = self.addRouter("ovh_r1")  # ovh_r1 to ovh_r6: routers located in Frankfurt
         ovh_r2 = self.addRouter("ovh_r2")
         ovh_r3 = self.addRouter("ovh_r3")
@@ -77,7 +78,6 @@ class OVHTopology(IPTopo):
         set_rr(self, rr=ovh_r8,
                peers=[ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r7, ovh_r9, ovh_r10, ovh_r11, ovh_r12])
         # Adding links
-        # self.addLink(r1, r2, params1={"ip": "2001:2345:7::a/64"}, params2={"ip": "2001:2345:7::b/64"}, igp_metric=5)
         self.addLink(ovh_r1, ovh_r2)
         self.addLink(ovh_r1, ovh_r3)
         self.addLink(ovh_r2, ovh_r4)
@@ -126,19 +126,55 @@ class OVHTopology(IPTopo):
 
         super().build(*args, **kwargs)
 
+    def set_ip_address_link(self, link, router, ipv4_addr=None, ipv6_addr=None):
+        """
+        Set IPv4 and IPv6 addresses with interface parameters of a specified link.
+
+        :param link: (LinkDescription) Link on which we want to set an IP address.
+        :param router: (RouterDescription) Router connected to link on which apply IP addresses (on a given interface).
+        :param ipv4_addr: (str) IPv4 address.
+        :param ipv6_addr: (str) IPv6 address.
+        """
+        if ipv4_addr or ipv6_addr:
+            if ipv4_addr and not ipv6_addr:
+                link[router].addParams(ip=ipv4_addr)
+            elif not ipv4_addr and ipv6_addr:
+                link[router].addParams(ip=ipv6_addr)
+            else:
+                link[router].addParams(ip=(ipv4_addr, ipv6_addr))
+
     def add_ospf(self, all_routers):
         """
         Add Open Shortest Path as Interior Gateway Protocol (IGP), both for IPv4 and IPv6.
 
-        :param all_routers: (list of Routers)
+        :param all_routers: (list of RouterDescription) A list of all routers contained in the network.
         """
         for router in all_routers:
             router.addDaemon(OSPF)
             router.addDaemon(OSPF6)
 
+    def add_ospf_cost(self, router1, router2, ospf_cost_value):
+        """
+        Add an IPG metric to a link between two routers.
+
+        :param router1: (RouterDescription) A first router.
+        :param router2: (RouterDescription) A second router connected to the first one with an OSPF cost on this link.
+        :param ospf_cost_value: (int) The (OSPF) IGP metric.
+        """
+        self.addLink(router1, router2, igp_metric=ospf_cost_value)
+
     def add_bgp(self, all_routers, ovh_routers, telia_routers, google_routers, cogent_routers, level3_routers):
         """
-        Add Border Gateway Protocol (BGP) to the routers and specify which prefixes they advertise.
+        Add Border Gateway Protocol (BGP) to the routers and specify which prefixes they advertise (both for IPv4
+        and IPv6).
+
+        :param all_routers: (list of RouterDescription) A list of all routers contained in the network.
+        :param ovh_routers: (list of RouterDescription) List of OVH's routers having an eBGP session which will
+        redistribute prefixes advertised by other ASes.
+        :param telia_routers: (list of RouterDescription) List of Telia's routers to which OVH routers are connected.
+        :param google_routers: (list of RouterDescription) List of Google's routers to which OVH routers are connected.
+        :param cogent_routers: (list of RouterDescription) List of Cogent's routers to which OVH routers are connected.
+        :param level3_routers: (list of RouterDescription) List of Level3's routers to which OVH routers are connected.
         """
         family_ipv4 = AF_INET()
         family_ipv6 = AF_INET6()
@@ -149,17 +185,58 @@ class OVHTopology(IPTopo):
             router.addDaemon(BGP, family=AF_INET6(redistribute=("ospf6", "connected"), ))
         # Other ASes advertise specific prefixes
         for router in telia_routers:
+            #TODO: family=AF_INET(networks=(...) or address_families=(_bgp.AF_INET(networks=('1.2.3.0/24',)),)?
             router.addDaemon(BGP, family=AF_INET(networks=("dead:beef::/32",), ))  # TODO: change IP address space
+            router.addDaemon(BGP, family=AF_INET6(networks=("dead:beef::/32",), ))
         for router in google_routers:
             router.addDaemon(BGP, family=AF_INET(networks=("dead:baef::/32",), ))
+            router.addDaemon(BGP, family=AF_INET6(networks=("dead:baef::/32",), ))
         for router in cogent_routers:
             router.addDaemon(BGP, family=AF_INET(networks=("dead:bbef::/32",), ))
+            router.addDaemon(BGP, family=AF_INET6(networks=("dead:bbef::/32",), ))
         for router in level3_routers:
             router.addDaemon(BGP, family=AF_INET(networks=("dead:bcef::/32",), ))
+            router.addDaemon(BGP, family=AF_INET6(networks=("dead:bcef::/32",), ))
+
+    def set_bgp_local_pref(self, dest_router, local_pref_value, src_router):
+        """
+        Set the local-pref BGP attribute.
+
+        :param dest_router: (RouterDescription) Destination router influenced by local-pref.
+        :param local_pref_value: (int) Local-pref value (if high, it will be preferred).
+        :param src_router: (RouterDescription) Source router influenced by local-pref.
+        """
+        al = AccessList(name='all', entries=('any',))
+        dest_router.get_config(BGP) \
+            .set_local_pref(local_pref_value, from_peer=src_router, matching=(al,))
+
+    def set_bgp_med(self, src_router, med_value, dest_router):
+        """
+        Set the MED BGP attribute.
+
+        :param src_router: (RouterDescription) Source router whose link to dest_router has a MED value.
+        :param med_value: (int) MED value (if high, it will be avoided if possible).
+        :param dest_router: (RouterDescription) Destination router whose link to dest_router has a MED value.
+        """
+        al = AccessList(name='all', entries=('any',))
+        src_router.get_config(BGP) \
+            .set_med(med_value, to_peer=dest_router, matching=(al,))
+
+    def set_bgp_community(self, dest_router, community, src_router):
+        """
+        Set a BGP community.
+
+        :param dest_router: (RouterDescription) Destination router on which BGP community will be applied.
+        :param community: (str) The BGP community value.
+        :param src_router: (RouterDescription) Source router influenced by the BGP community.
+        """
+        al = AccessList(name='all', entries=('any',))
+        dest_router.get_config(BGP)\
+            .set_community(community, from_peer=src_router, matching=(al,))\
 
     def get_ipv6_address(self, addr, lo=False):
         """
-
+        Get and return an IPv6 address range according to our addressing plan (see docs/Addressing Plan.cmd).
         """
         res = f"2023:{addr}::/{str(MAX_IPV6_PREFIX_LEN)}"
         if lo:
@@ -168,7 +245,7 @@ class OVHTopology(IPTopo):
 
     def get_ipv4_address(self, addr, lo=False):
         """
-
+        Get and return an IPv4 address range according to our addressing plan (see docs/Addressing Plan.cmd).
         """
         res = f"12.{addr}.0.0/{str(MAX_IPV4_PREFIX_LEN)}"
         if lo:
