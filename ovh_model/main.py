@@ -14,7 +14,8 @@ import ipmininet
 from ipmininet.cli import IPCLI
 from ipmininet.ipnet import IPNet
 from ipmininet.iptopo import IPTopo
-from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6, AccessList
+from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6, AccessList, \
+    bgp_peering, bgp_fullmesh
 
 # CONSTANT VALUES
 
@@ -73,10 +74,10 @@ class OVHTopology(IPTopo):
         self.addAS(4, (level3_r1,))
         self.addAS(5, (google_r1,))
         # Configuring RRs
-        set_rr(self, rr=ovh_r7,
-               peers=[ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r8, ovh_r9, ovh_r10, ovh_r11, ovh_r12])
-        set_rr(self, rr=ovh_r8,
-               peers=[ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r7, ovh_r9, ovh_r10, ovh_r11, ovh_r12])
+        peers_rr1 = [ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r8, ovh_r9, ovh_r10, ovh_r11, ovh_r12]
+        peers_rr2 = [ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r7, ovh_r9, ovh_r10, ovh_r11, ovh_r12]
+        self.add_router_reflector(ovh_r7, peers_rr1)
+        self.add_router_reflector(ovh_r8, peers_rr2)
         # Adding links
         self.addLink(ovh_r1, ovh_r2)
         self.addLink(ovh_r1, ovh_r3)
@@ -155,13 +156,55 @@ class OVHTopology(IPTopo):
 
     def add_ospf_cost(self, router1, router2, ospf_cost_value):
         """
-        Add an IPG metric to a link between two routers.
+        Add an IPG metric to a link between two routers (default value: 1).
 
         :param router1: (RouterDescription) A first router.
         :param router2: (RouterDescription) A second router connected to the first one with an OSPF cost on this link.
         :param ospf_cost_value: (int) The (OSPF) IGP metric.
         """
-        self.addLink(router1, router2, igp_metric=ospf_cost_value)
+        self.addLink(router1, router2, igp_cost=ospf_cost_value)
+
+    def add_ospf_area(self, router1, router2, ospf_area_value):
+        """
+        Add an OSPF area of a link between two routers (default value: ‘0.0.0.0’).
+
+        :param router1: (RouterDescription) A first router.
+        :param router2: (RouterDescription) A second router connected to the first one with an OSPF area on this link.
+        :param ospf_area_value: (str) The OSPF area of the link.
+        """
+        self.addLink(router1, router2, igp_area=ospf_area_value)
+
+    def set_ospf_priority(self, link, router, priority_value):
+        """
+        Change the OSPF priority/chances of a router to be the Designated Router (DR).
+
+        :param link: (LinkDescription) Link on which we want to set an IP address.
+        :param router: (RouterDescription) Router connected to link on which apply IP addresses (on a given interface).
+        :param priority_value: (int) Priority value (highest = best chances to be designated).
+        """
+        link[router].addParams(ospf_priority=priority_value)
+
+    def set_ospf_hello_interval(self, link, router, hello_timer):
+        """
+        Change the OSPF hello interval timer.
+
+        :param link: (LinkDescription) Link on which we want to set the timer.
+        :param router: (RouterDescription) Router connected to link on which apply the hello timer (on a given
+        interface).
+        :param hello_timer: (int) Timer.
+        """
+        link[router].addParams(ospf_hello_int=hello_timer)
+
+    def set_ospf_dead_interval(self, link, router, dead_timer):
+        """
+        Change the OSPF hello interval timer.
+
+        :param link: (LinkDescription) Link on which we want to set the timer.
+        :param router: (RouterDescription) Router connected to link on which apply the hello timer (on a given
+        interface).
+        :param dead_timer: (int) Timer.
+        """
+        link[router].addParams(ospf_dead_int=dead_timer)
 
     def add_bgp(self, all_routers, ovh_routers, telia_routers, google_routers, cogent_routers, level3_routers):
         """
@@ -185,7 +228,7 @@ class OVHTopology(IPTopo):
             router.addDaemon(BGP, family=AF_INET6(redistribute=("ospf6", "connected"), ))
         # Other ASes advertise specific prefixes
         for router in telia_routers:
-            #TODO: family=AF_INET(networks=(...) or address_families=(_bgp.AF_INET(networks=('1.2.3.0/24',)),)?
+            # TODO: family=AF_INET(networks=(...) or address_families=(_bgp.AF_INET(networks=('1.2.3.0/24',)),)?
             router.addDaemon(BGP, family=AF_INET(networks=("dead:beef::/32",), ))  # TODO: change IP address space
             router.addDaemon(BGP, family=AF_INET6(networks=("dead:beef::/32",), ))
         for router in google_routers:
@@ -206,7 +249,8 @@ class OVHTopology(IPTopo):
         :param local_pref_value: (int) Local-pref value (if high, it will be preferred).
         :param src_router: (RouterDescription) Source router influenced by local-pref.
         """
-        al = AccessList(name='all', entries=('any',))
+        al = AccessList(name='all',
+                        entries=('any',))  # Add an access list to "any" (this can be an IP prefix or address instead)
         dest_router.get_config(BGP) \
             .set_local_pref(local_pref_value, from_peer=src_router, matching=(al,))
 
@@ -218,9 +262,27 @@ class OVHTopology(IPTopo):
         :param med_value: (int) MED value (if high, it will be avoided if possible).
         :param dest_router: (RouterDescription) Destination router whose link to dest_router has a MED value.
         """
-        al = AccessList(name='all', entries=('any',))
+        al = AccessList(name='all',
+                        entries=('any',))  # Add an access list to "any" (this can be an IP prefix or address instead)
         src_router.get_config(BGP) \
             .set_med(med_value, to_peer=dest_router, matching=(al,))
+
+    def set_ibgp_session(self, router1, router2):
+        """
+        Register a BGP peering between two nodes router1 and router2.
+
+        :param router1: (RouterDescription) First router.
+        :param router2: (RouterDescription) Second router to peer.
+        """
+        bgp_peering(self, router1, router2)
+
+    def set_ibgp_fullmesh(self, routers_list):
+        """
+        Set a full-mesh set of iBGP peering between a list of n routers (i.e. (n*(n-1)//2) iBGP peering).
+
+        :param routers_list: (list of RouterDescription) Routers on which a full-mesh iBGP peering is set.
+        """
+        bgp_fullmesh(self, routers_list)
 
     def set_bgp_community(self, dest_router, community, src_router):
         """
@@ -230,9 +292,21 @@ class OVHTopology(IPTopo):
         :param community: (str) The BGP community value.
         :param src_router: (RouterDescription) Source router influenced by the BGP community.
         """
-        al = AccessList(name='all', entries=('any',))
-        dest_router.get_config(BGP)\
-            .set_community(community, from_peer=src_router, matching=(al,))\
+        al = AccessList(name='all',
+                        entries=('any',))  # Add an access list to "any" (this can be an IP prefix or address instead)
+        dest_router.get_config(BGP) \
+            .set_community(community, from_peer=src_router, matching=(al,))
+
+    def add_router_reflector(self, router_reflector, clients_list):
+        """
+        Set a router reflector and configure its iBGP peering.
+
+        :param router_reflector: (RouterDescription) Router designated as router reflector.
+        :param clients_list: (list of RouterDescription) Clients of the router reflector.
+        """
+        set_rr(self, rr=router_reflector, peers=clients_list)
+        for client in clients_list:
+            self.set_ibgp_session(router_reflector, client)
 
     def get_ipv6_address(self, addr, lo=False):
         """
