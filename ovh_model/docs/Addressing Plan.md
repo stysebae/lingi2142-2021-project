@@ -2,24 +2,24 @@
 
 ## IPv4
 
-- Each city has its own subnet.
+- **Each city has its own subnet**.
 - We use the public IP addresses range 12.0.0.0, as following:
 
   | Location           | IP Addresses range | Loopback Addresses |
   |--------------------|--------------------|--------------------|
   | *Loopback Addresses* | 12.10.c.x/32       |                    |
-  | Frankfurt          | 12.11.0.0/29       | 12.10.1.x/32       |
-  | Roubaix            | 12.12.0.0/31       | 12.10.2.x/32       |
-  | Strasbourg         | 12.13.0.0/31       | 12.10.3.x/32       |
-  | Paris              | 12.14.0.0/31       | 12.10.4.x/32       |
+  | Frankfurt          | 12.11.0.0/24       | 12.10.11.x/32       |
+  | Roubaix            | 12.12.0.0/24       | 12.10.12.x/32       |
+  | Strasbourg         | 12.13.0.0/24       | 12.10.13.x/32       |
+  | Paris              | 12.14.0.0/24       | 12.10.14.x/32       |
 
   A few comments about this choice:
   - the format of the loopback addresses is 12.10.c.x/32 where *c* indicates the city ID and *x* the interface ID. Because we do not need more than one loopback address, its mask is /32.
-  - We use /29 mask for Frankfurt because this subnet contains more routers than the others cities (6 vs. 2).
+  - We use **/24 mask** for each city. Inside this prefix, **a link between two interfaces uses a /31 mask**.
 
 ## IPv6
 
-- Same spirit as for IPv4: each city has its own subnet composed of public addresses, but with IPv6 we may have 3 differents types of addresses (unicast, anycast and multicast) and we are not constrained with the number of available IP addresses like in IPv4: an IPv6 address consists of 64 bits of "network number" and 64 bits of "host number" (it is able to address 2^40 networks and 2^50 hosts).
+- Same spirit as for IPv4: **each city has its own subnet composed of public addresses**, but with IPv6 we may have 3 differents types of addresses (unicast, anycast and multicast) and we are not constrained with the number of available IP addresses like in IPv4: **an IPv6 address consists of 64 bits of "network number" and 64 bits of "host number"** (it is able to address 2^40 networks and 2^50 hosts).
 - We use **IPv6 global unicast addresses**. According to [RFC3587](https://www.ietf.org/rfc/rfc3587.txt?number=3587) and [RFC4291](https://www.ietf.org/rfc/rfc4291.txt?number=4291), such addresses have the following format:
 
   | n bits            | m bits    | 128-n-m bits |
@@ -34,15 +34,15 @@
   |--------|-------------------|-----------|--------------|
   | 001    | global routing ID | subnet ID | interface ID |
 
-  [RFC3177](https://tools.ietf.org/html/rfc3177) recommends to use /64 when it is known that one and only one subnet is needed, which is the case here. We have then:
+  [RFC3177](https://tools.ietf.org/html/rfc3177) recommends to use /48 mask in general case. Inside this prefix, **we use /127 mask for links between interfaces**. We have then:
 
   | Location           | IP Addresses range    | Loopback Addresses      |
   |--------------------|-----------------------|-------------------------|
   | *Loopback Addresses* | 2023:​​a:C::x/128 |                         |
-  | Frankfurt          | 2023:​b::/64 | 2023:​a:​b::x/128 |
-  | Roubaix            | 2023:​c::/64 | 2023:​a:​c::x/128 |
-  | Strasbourg         | 2023:​d::/64 | 2023:​a:​d::x/128 |
-  | Paris              | 2023:​e::/64 | 2023:​a:​e::x/128 |
+  | Frankfurt          | 2023:​b::/48 | 2023:​a:​b::x/128 |
+  | Roubaix            | 2023:​c::/48 | 2023:​a:​c::x/128 |
+  | Strasbourg         | 2023:​d::/48 | 2023:​a:​d::x/128 |
+  | Paris              | 2023:​e::/48 | 2023:​a:​e::x/128 |
 
   where *C* indicates the city (and not the 12 hexadecimal value!) and *x* designates the interface ID.
 
