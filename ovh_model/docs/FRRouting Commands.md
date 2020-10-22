@@ -5,6 +5,7 @@
 - `nodes`: displays nodes
 - `links` or `net`: displays links
 - `<NODE|SWITCH|CONTROLLER> cmd`: executes `cmd` on the specified node (e.g.: `ovh_r1 ifconfig -a`)
+- `pingall`: tests reachability over IPv4 and IPv6
 - `<NODE1> ping -c X <NODE2>`: tests connectivity between `NODE1` and `NODE2` (where `X` is an integer)
 - `dump`: displays all information about the nodes
 
@@ -30,7 +31,7 @@ The commands listed below assume that you are using FRRouting CLI.
 
 - `show ip route`: shows all the routes contained in the RIB
 
-## BGP
+## BGP (TODO)
 
 (Commands known via `<node> telnet localhost 2605`)
 
@@ -84,18 +85,21 @@ We can enable OSPF on each router by the following steps:
 
 - `enable`: enters in EXEC mode (e.g.: `ovh_r1#`)
 - `configure terminal`: enters in global configuration mode
-- `router ospf <PID>`: enables OSPF on the router
+- `router ospf <PID>`: enables OSPF on the router under process ID `PID`
 - `network <IP_ADDRESS WILDCARD_MASK> area <AREA_NBR>`: sets the interface (`IP_ADDRESS WILDCARD_MASK`) on which OSPF will run and his area number (`AREA_NBR`)
 - `end`: exits router configuration mode
 
 ### Configuring OSPF Interface Parameters
 
-After `enable` and `configure terminal`, **we have to specify the interface number (that we would like to configure) via `interface`**. Then, we can configure these differents parameters (once finished, type `end`):
+After `enable` and `configure terminal`, **we have to specify the interface number (that we would like to configure) via `interface <X>`**. Then, we can configure these different parameters (once finished, type `end`):
 
 - `ip address <IP_ADDRESS SUBNET_MASK>`: changes the IP address to `IP_ADDRESS SUBNET_MASK` on the selected interface
 - `ip ospf cost <X>`: defines the cost `X` of the link connected at the selected interface
 - `neighbor <NEIGHBOR_IP COST>`: defines a specific cost (`NEIGHBOR_IP COST`) to reach a given neighbor (otherwise, neighbors will assume the cost of the interface based on the `ip ospf cost` command)
-- `ip ospf priority <X>`: changes the chances/priority (to `X`) of the router to be the OSPF designated router (who act as the main point of contact for the network segment)
+- `bandwidth <X>` [warning: does not work on Mininet]: defines the bandwidth to `X` Kbps, which is used to influence route metric cost (cost is the inverse of bandwidth: higher bandwidth has lower cost)
+- `ip ospf priority <X>`: changes the chances/priority of `X` from range 0 to 255 to be the OSPF designated router (who act as the main point of contact for the network segment)
+
+If only `interface` is specified, then it shows the interfaces available on the router (where `lo` designates the loopback interface).
 
 #### "Hello" and "Dead" Intervals
 
@@ -109,17 +113,20 @@ We can change the value of the two timers with the commands (after `enable`, `co
 ### Debugging Commands:
 
 - `show ip ospf`: general information about OSPF on the router
-- `show ip ospf database`: information about the link state database
-- `show ip ospf route`: show the OSPF topology table
-- `show ip ospf route summary`: give a summary of the OSPF routes
+- `show ip ospf interface`: provides information about each of the router’s interfaces.
 - `show ip ospf neighbor`: display OSPF-neighbor information on a per-interface basis
-- `show ip ospf interface`: provide information about each of the router’s interfaces.
+- `show ip ospf database`: information about the link state database
+- `show ip ospf route`: shows the OSPF topology table
+- `show ip ospf route summary`: gives a summary of the OSPF routes
 - `show ip ospf spf tree`: ASCII representation of the shortest path tree
+- `clear ip route <IP_ADDRESS|*>` [warning: does not work on Mininet]: clears particular route (given by `IP_ADDRESS`) or all routes from routing table
+- `debug ip ospf packets` [warning: does not work on Mininet]: displays exchanged OSPF packets
 
 ## References
 
 - [Cisco's IP Routing: BGP Configuration Guide](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/iproute_bgp/configuration/xe-16/irg-xe-16-book.html)
 - [Cisco's IP Routing: OSPF Configuration Guide](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/iproute_ospf/configuration/xe-16/iro-xe-16-book/iro-cfg.html)
+- [OSPF Configuration Step by Step Guide](https://www.computernetworkingnotes.com/ccna-study-guide/ospf-configuration-step-by-step-guide.html)
 - [FRRouting User Guide](http://docs.frrouting.org/en/stable-7.1/)
 - [Exploring OSPFv3 routing with IPMininet](http://blog.computer-networking.info/ipmininet-ospfv3/)
 - [Exploring BGP with IPMininet](http://blog.computer-networking.info/bgp-mininet/)
