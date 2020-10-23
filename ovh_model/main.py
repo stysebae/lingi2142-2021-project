@@ -74,10 +74,17 @@ class OVHTopology(IPTopo):
         self.addAS(4, (level3_r1,))
         self.addAS(5, (google_r1,))
         # Configuring RRs
-        peers_rr1 = [ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r8, ovh_r9, ovh_r10, ovh_r11, ovh_r12]
-        peers_rr2 = [ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r7, ovh_r9, ovh_r10, ovh_r11, ovh_r12]
+        """
+        There are 4 RR's configured in a two layer hierarchy, ovh_r7 is in the first layer and ovh_r3, ovh_r10 and ovh_r8 are in the second layer
+        """
+        peers_rr1 = [ovh_r3, ovh_r10, ovh_r8]
+        peers_rr2 = [ovh_r1, ovh_r2, ovh_r5]
+        peers_rr3 = [ovh_r9, ovh_r11, ovh_r12]
+        peers_rr4 = [ovh_r4, ovh_r6]
         self.add_router_reflector(ovh_r7, peers_rr1)
-        self.add_router_reflector(ovh_r8, peers_rr2)
+        self.add_router_reflector(ovh_r3, peers_rr2)
+        self.add_router_reflector(ovh_r10, peers_rr3)
+        self.add_router_reflector(ovh_r8, peers_rr4)
         # Adding links
         self.addLink(ovh_r1, ovh_r2)
         self.addLink(ovh_r1, ovh_r3)
@@ -305,8 +312,6 @@ class OVHTopology(IPTopo):
         :param clients_list: (list of RouterDescription) Clients of the router reflector.
         """
         set_rr(self, rr=router_reflector, peers=clients_list)
-        for client in clients_list:
-            self.set_ibgp_session(router_reflector, client)
 
     def get_ipv6_address(self, addr, lo=False):
         """
