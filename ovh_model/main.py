@@ -25,7 +25,7 @@ STRASBOURG_ID = ("d", "13")
 PARIS_ID = ("e", "14")
 
 # Routers configuration
-MAX_IPV4_PREFIX_LEN = 24  # /24 and /48 are default values for IPv4 and IPv6
+MAX_IPV4_PREFIX_LEN = 31  # /24 and /48 are default values for IPv4 and IPv6
 MAX_IPV6_PREFIX_LEN = 48
 
 # Links and Loopback addresses
@@ -34,6 +34,35 @@ IPV6_LO_PREFIX = IPV6_LINK_PREFIX = 128
 
 
 class OVHTopology(IPTopo):
+
+    class IPv4Address():
+        def __init__(self, firstByte=10, secondByte=0, thirdByte=0, fourthByte=0, mask=24):
+            self.firstByte = firstByte
+            self.secondByte = secondByte
+            self.thirdByte = thirdByte
+            self.fourthByte = fourthByte
+            self.mask = mask
+
+        def __str__(self):
+            return "{}.{}.{}.{}/{}".format(self.firstByte, self.secondByte, self.thirdByte, self.fourthByte, self.mask)
+
+        def getFourthByte(self):
+            return self.fourthByte
+
+        def setHost(self, host):
+            hostList = str(host).split(".")
+            if len(hostList) == 3:
+                self.secondByte = hostList[0]
+                self.thirdByte = hostList[1]
+                self.fourthByte = hostList[2]
+            elif len(hostList) == 2:
+                self.thirdByte = hostList[0]
+                self.fourthByte = hostList[1]
+            else:
+                self.fourthByte = hostList[0]
+
+
+
     """
     This class represents the topology of our OVH model (see ovh_model/img/model_preview.jpg).
     """
@@ -45,22 +74,22 @@ class OVHTopology(IPTopo):
         """
         # Adding routers
         # r1 = self.addRouter('r1', lo_addresses=["2042:1::1/64", "10.1.1.1/24"])
-        ovh_r1 = self.addRouter("ovh_r1")  # ovh_r1 to ovh_r6: routers located in Frankfurt
-        ovh_r2 = self.addRouter("ovh_r2")
-        ovh_r3 = self.addRouter("ovh_r3")
-        ovh_r4 = self.addRouter("ovh_r4")
-        ovh_r5 = self.addRouter("ovh_r5")
-        ovh_r6 = self.addRouter("ovh_r6")
-        ovh_r7 = self.addRouter("ovh_r7")  # ovh_r7, ovh_r8: routers in Roubaix
-        ovh_r8 = self.addRouter("ovh_r8")
-        ovh_r9 = self.addRouter("ovh_r9")  # ovh_r9, ovh_r12: routers in Strasbourg
-        ovh_r10 = self.addRouter("ovh_r10")
-        ovh_r11 = self.addRouter("ovh_r11")
-        ovh_r12 = self.addRouter("ovh_r12")
-        telia_r1 = self.addRouter("telia_r1")
-        google_r1 = self.addRouter("google_r1")
-        cogent_r1 = self.addRouter("cogent_r1")
-        level3_r1 = self.addRouter("level3_r1")
+        ovh_r1 = self.addRouter("ovh_r1", lo_addresses=["2023:a:1::1/128", self.IPv4Address(12, 10, 1, 1, 32).__str__()])  # ovh_r1 to ovh_r6: routers located in Frankfurt
+        ovh_r2 = self.addRouter("ovh_r2", lo_addresses=["2023:a:1::2/128", self.IPv4Address(12, 10, 1, 2, 32).__str__()])
+        ovh_r3 = self.addRouter("ovh_r3", lo_addresses=["2023:a:1::3/128", self.IPv4Address(12, 10, 1, 3, 32).__str__()])
+        ovh_r4 = self.addRouter("ovh_r4", lo_addresses=["2023:a:1::4/128", self.IPv4Address(12, 10, 1, 4, 32).__str__()])
+        ovh_r5 = self.addRouter("ovh_r5", lo_addresses=["2023:a:1::5/128", self.IPv4Address(12, 10, 1, 5, 32).__str__()])
+        ovh_r6 = self.addRouter("ovh_r6", lo_addresses=["2023:a:1::6/128", self.IPv4Address(12, 10, 1, 6, 32).__str__()])
+        ovh_r7 = self.addRouter("ovh_r7", lo_addresses=["2023:a:2::7/128", self.IPv4Address(12, 10, 2, 1, 32).__str__()])  # ovh_r7, ovh_r8: routers in Roubaix
+        ovh_r8 = self.addRouter("ovh_r8", lo_addresses=["2023:a:2::8/128", self.IPv4Address(12, 10, 2, 2, 32).__str__()])
+        ovh_r9 = self.addRouter("ovh_r9", lo_addresses=["2023:a:3::9/128", self.IPv4Address(12, 10, 3, 1, 32).__str__()])  # ovh_r9, ovh_r12: routers in Strasbourg
+        ovh_r10 = self.addRouter("ovh_r10", lo_addresses=["2023:a:4::a/128", self.IPv4Address(12, 10, 4, 1, 32).__str__()])
+        ovh_r11 = self.addRouter("ovh_r11", lo_addresses=["2023:a:4::b/128", self.IPv4Address(12, 10, 4, 2, 32).__str__()])
+        ovh_r12 = self.addRouter("ovh_r12", lo_addresses=["2023:a:3::c/128", self.IPv4Address(12, 10, 3, 2, 32).__str__()])
+        telia_r1 = self.addRouter("telia_r1", lo_addresses=["2023:a:5::d/128", self.IPv4Address(12, 10, 5, 1, 32).__str__()])
+        google_r1 = self.addRouter("google_r1", lo_addresses=["2023:a:6::e/128", self.IPv4Address(12, 10, 6, 1, 32).__str__()])
+        cogent_r1 = self.addRouter("cogent_r1", lo_addresses=["2023:a:7::f/128", self.IPv4Address(12, 10, 7, 1, 32).__str__()])
+        level3_r1 = self.addRouter("level3_r1", lo_addresses=["2023:a:8::10/128", self.IPv4Address(12, 10, 8, 1, 32).__str__()])
         all_routers = [ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r7, ovh_r8, ovh_r9, ovh_r10, ovh_r11,
                        ovh_r12, telia_r1, google_r1, cogent_r1, level3_r1]
         # Adding protocols to routers
@@ -86,33 +115,33 @@ class OVHTopology(IPTopo):
         self.add_router_reflector(ovh_r10, peers_rr3)
         self.add_router_reflector(ovh_r8, peers_rr4)
         # Adding links
-        self.addLink(ovh_r1, ovh_r2)
-        self.addLink(ovh_r1, ovh_r3)
-        self.addLink(ovh_r2, ovh_r4)
-        self.addLink(ovh_r3, ovh_r4)
-        self.addLink(ovh_r3, ovh_r6)
-        self.addLink(ovh_r3, ovh_r5)
-        self.addLink(ovh_r3, ovh_r9)
-        self.addLink(ovh_r3, ovh_r7)
-        self.addLink(ovh_r4, ovh_r5)
-        self.addLink(ovh_r4, ovh_r6)
-        self.addLink(ovh_r4, ovh_r8)
-        self.addLink(ovh_r4, ovh_r12)
-        self.addLink(ovh_r5, telia_r1)
-        self.addLink(ovh_r6, telia_r1)
-        self.addLink(ovh_r6, level3_r1)
-        self.addLink(ovh_r7, ovh_r8)
-        self.addLink(ovh_r7, ovh_r10)
-        self.addLink(ovh_r8, ovh_r11)
-        self.addLink(ovh_r9, ovh_r12)
-        self.addLink(ovh_r9, ovh_r10)
-        self.addLink(ovh_r10, ovh_r11)
-        self.addLink(ovh_r10, google_r1)
-        self.addLink(ovh_r10, cogent_r1)
-        self.addLink(ovh_r11, ovh_r12)
-        self.addLink(ovh_r11, level3_r1)
-        self.addLink(ovh_r11, cogent_r1)
-        self.addLink(ovh_r11, google_r1)
+        self.add_ip_address_link(ovh_r1, ovh_r2, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 0, 31)))
+        self.add_ip_address_link(ovh_r1, ovh_r3, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 2, 31)))
+        self.add_ip_address_link(ovh_r2, ovh_r4, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 4, 31)))
+        self.add_ip_address_link(ovh_r3, ovh_r4, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 6, 31)))
+        self.add_ip_address_link(ovh_r3, ovh_r6, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 8, 31)))
+        self.add_ip_address_link(ovh_r3, ovh_r5, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 10, 31)))
+        self.add_ip_address_link(ovh_r3, ovh_r9, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 12, 31)))
+        self.add_ip_address_link(ovh_r3, ovh_r7, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 14, 31)))
+        self.add_ip_address_link(ovh_r4, ovh_r5, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 16, 31)))
+        self.add_ip_address_link(ovh_r4, ovh_r6, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 18, 31)))
+        self.add_ip_address_link(ovh_r4, ovh_r8, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 20, 31)))
+        self.add_ip_address_link(ovh_r4, ovh_r12, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 22, 31)))
+        self.add_ip_address_link(ovh_r5, telia_r1, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 24, 31)))
+        self.add_ip_address_link(ovh_r6, telia_r1, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 26, 31)))
+        self.add_ip_address_link(ovh_r6, level3_r1, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 28, 31)))
+        self.add_ip_address_link(ovh_r7, ovh_r8, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 30, 31)))
+        self.add_ip_address_link(ovh_r7, ovh_r10, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 32, 31)))
+        self.add_ip_address_link(ovh_r8, ovh_r11, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 34, 31)))
+        self.add_ip_address_link(ovh_r9, ovh_r12, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 36, 31)))
+        self.add_ip_address_link(ovh_r9, ovh_r10, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 38, 31)))
+        self.add_ip_address_link(ovh_r10, ovh_r11, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 40, 31)))
+        self.add_ip_address_link(ovh_r10, google_r1, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 42, 31)))
+        self.add_ip_address_link(ovh_r10, cogent_r1, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 44, 31)))
+        self.add_ip_address_link(ovh_r11, ovh_r12, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 46, 31)))
+        self.add_ip_address_link(ovh_r11, level3_r1, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 48, 31)))
+        self.add_ip_address_link(ovh_r11, cogent_r1, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 50, 31)))
+        self.add_ip_address_link(ovh_r11, google_r1, (self.get_ipv6_address(11), self.IPv4Address(12, 11, 0, 52, 31)))
         # Adding eBGP sessions
         ebgp_session(self, ovh_r5, telia_r1, link_type=SHARE)
         ebgp_session(self, ovh_r6, telia_r1, link_type=SHARE)
@@ -123,18 +152,19 @@ class OVHTopology(IPTopo):
 
         super().build(*args, **kwargs)
 
-    def add_ip_address_link(self, router1, router2, ip_addr_router1, ip_addr_router2):
+    def add_ip_address_link(self, router1, router2, ip_addr_router):
         """
         Add a link with IPv4 and IPv6 addresses on interface parameters.
 
         :param router1: (RouterDescription) First router attached to the link.
         :param router2: (RouterDescription) Second router attached to the link.
-        :param ip_addr_router1: (tuple of str) IP addresses (IPv6, IPv4) of router 1.
-        :param ip_addr_router2: (tuple of str) IP addresses (IPv6, IPv4) of router 2.
+        :param ip_addr_router: (tuple of str) IP addresses (IPv6, IPv4) of routers.
         """
         link = self.addLink(router1, router2)
-        link[router1].addParams(ip=ip_addr_router1)
-        link[router2].addParams(ip=ip_addr_router2)
+        firstRouter, secondRouter = ip_addr_router, ip_addr_router
+        link[router1].addParams(ip=(firstRouter[0], firstRouter[1].__str__()))
+        secondRouter[1].setHost(secondRouter[1].getFourthByte() + 1)
+        link[router2].addParams(ip=(secondRouter[0], secondRouter[1].__str__()))
         return link
 
     def add_ospf(self, all_routers):
@@ -312,9 +342,9 @@ class OVHTopology(IPTopo):
         """
         Get and return an IPv4 address range according to our addressing plan (see docs/Addressing Plan.cmd).
         """
-        res = f"12.{addr}.0.0/{str(MAX_IPV4_PREFIX_LEN)}"
+        res = self.IPv4Address(12, addr, 0, 0, MAX_IPV4_PREFIX_LEN)
         if lo:
-            res = f"12.10.{addr}.0/{str(IPV4_LO_PREFIX)}"
+            res = self.IPv4Address(12, 10, addr, 0, IPV4_LO_PREFIX)
         return res
 
 
@@ -322,7 +352,7 @@ if __name__ == '__main__':
     ipmininet.DEBUG_FLAG = True
     lg.setLogLevel("info")
     net = IPNet(topo=OVHTopology(), max_v4_prefixlen=MAX_IPV4_PREFIX_LEN, max_v6_prefixlen=MAX_IPV6_PREFIX_LEN,
-                allocate_IPs=True)
+                allocate_IPs=False)
     try:
         net.start()
         IPCLI(net)
