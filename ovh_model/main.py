@@ -113,17 +113,6 @@ class OVHTopology(IPTopo):
         self.addLink(ovh_r11, level3_r1)
         self.addLink(ovh_r11, cogent_r1)
         self.addLink(ovh_r11, google_r1)
-        # Adding subnets
-        """
-        self.addSubnet(nodes=[ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6],
-                       subnets=[self.get_ipv6_address(FRANKFURT_ID[0]), self.get_ipv4_address(FRANKFURT_ID[1])])
-        self.addSubnet(nodes=[ovh_r7, ovh_r8],
-                       subnets=[self.get_ipv6_address(ROUBAIX_ID[0]), self.get_ipv4_address(ROUBAIX_ID[1])])
-        self.addSubnet(nodes=[ovh_r9, ovh_r12],
-                       subnets=[self.get_ipv6_address(STRASBOURG_ID[0]), self.get_ipv4_address(STRASBOURG_ID[1])])
-        self.addSubnet(nodes=[ovh_r10, ovh_r11],
-                       subnets=[self.get_ipv6_address(PARIS_ID[0]), self.get_ipv4_address(PARIS_ID[1])])
-        """
         # Adding eBGP sessions
         ebgp_session(self, ovh_r5, telia_r1, link_type=SHARE)
         ebgp_session(self, ovh_r6, telia_r1, link_type=SHARE)
@@ -134,22 +123,19 @@ class OVHTopology(IPTopo):
 
         super().build(*args, **kwargs)
 
-    def set_ip_address_link(self, link, router, ipv4_addr=None, ipv6_addr=None):
+    def add_ip_address_link(self, router1, router2, ip_addr_router1, ip_addr_router2):
         """
-        Set IPv4 and IPv6 addresses with interface parameters of a specified link.
+        Add a link with IPv4 and IPv6 addresses on interface parameters.
 
-        :param link: (LinkDescription) Link on which we want to set an IP address.
-        :param router: (RouterDescription) Router connected to link on which apply IP addresses (on a given interface).
-        :param ipv4_addr: (str) IPv4 address.
-        :param ipv6_addr: (str) IPv6 address.
+        :param router1: (RouterDescription) First router attached to the link.
+        :param router2: (RouterDescription) Second router attached to the link.
+        :param ip_addr_router1: (tuple of str) IP addresses (IPv6, IPv4) of router 1.
+        :param ip_addr_router2: (tuple of str) IP addresses (IPv6, IPv4) of router 2.
         """
-        if ipv4_addr or ipv6_addr:
-            if ipv4_addr and not ipv6_addr:
-                link[router].addParams(ip=ipv4_addr)
-            elif not ipv4_addr and ipv6_addr:
-                link[router].addParams(ip=ipv6_addr)
-            else:
-                link[router].addParams(ip=(ipv4_addr, ipv6_addr))
+        link = self.addLink(router1, router2)
+        link[router1].addParams(ip=ip_addr_router1)
+        link[router2].addParams(ip=ip_addr_router2)
+        return link
 
     def add_ospf(self, all_routers):
         """
