@@ -12,4 +12,8 @@ We could represent it by the following model:
 
 ![OVH Initial Model](img/model_preview.jpg)
 
+With some information (with IPv4 addressing plan):
+
+![OVH Initial Model](img/advanced_model_preview.png)
+
 Keep in mind this scheme, because it is the basis of our network configuration.
