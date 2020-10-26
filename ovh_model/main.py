@@ -165,6 +165,11 @@ class OVHTopology(IPTopo):
         link[router1].addParams(ip=(firstRouter[0], firstRouter[1].__str__()))
         secondRouter[1].setHost(secondRouter[1].getFourthByte() + 1)
         link[router2].addParams(ip=(secondRouter[0], secondRouter[1].__str__()))
+
+        link[router1].addParams(ospf_dead_int=8)
+        link[router2].addParams(ospf_dead_int=8)
+        link[router1].addParams(ospf_hello_int=6)
+        link[router2].addParams(ospf_hello_int=6)
         return link
 
     def add_ospf(self, all_routers):
