@@ -8,55 +8,6 @@ List of prefixes announced by the peers (25 per peer) of ASes 1299, 15169, 174 a
 
 ### Root Servers
 
-- 199.9.14.0/24:
-```
-199.9.14.0/24      via 198.27.73.102 on eth0 [rbx_g1_nc5 2020-10-22 from 94.23.122.41] * (100/0) [AS394353i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 20080 394353 394353
-	BGP.next_hop: 198.27.73.102 (mia-mi1-bb1-a9.fl.us)
-	BGP.med: 1
-	BGP.local_pref: 300
-	BGP.community: (16276,38659) (20080,1000) (20080,1013) (20080,5000)
-	BGP.originator_id: 198.27.73.102 (mia-mi1-bb1-a9.fl.us)
-	BGP.cluster_list: 94.23.122.41 94.23.122.12 178.32.135.101
-                   via 198.27.73.102 on eth0 [rbx_g2_nc5 2020-10-22 from 94.23.122.46] (100/0) [AS394353i]
-```
-
-- 192.58.128.0/24 (local-pref higher than the previous one):
-
-```
-192.58.128.0/24    via 198.27.73.102 on eth0 [rbx_g1_nc5 2020-10-22 from 94.23.122.41] * (100/0) [AS26415i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 52320 53087 53087 53087 53087 53087 53087 262773 26415 26415 26415
-	BGP.next_hop: 198.27.73.102 (mia-mi1-bb1-a9.fl.us)
-	BGP.med: 1
-	BGP.local_pref: 330
-	BGP.atomic_aggr: 
-	BGP.aggregator: 186.232.192.202 AS26415
-	BGP.community: (0,6939) (16276,39659)
-	BGP.originator_id: 198.27.73.102 (mia-mi1-bb1-a9.fl.us)
-	BGP.cluster_list: 94.23.122.41 94.23.122.12 178.32.135.101
-                   via 198.27.73.102 on eth0 [rbx_g2_nc5 2020-10-22 from 94.23.122.46] (100/0) [AS26415i]
-```
-
-- 193.0.14.0/24 (local-pref higher than the previous one):
-
-```
-193.0.14.0/24      via 198.27.73.102 on eth0 [rbx_g1_nc5 2020-10-22 from 94.23.122.41] * (100/0) [AS25152i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 7738 28186 25152
-	BGP.next_hop: 198.27.73.102 (mia-mi1-bb1-a9.fl.us)
-	BGP.med: 1
-	BGP.local_pref: 350
-	BGP.community: (7738,50171) (16276,32659)
-	BGP.originator_id: 198.27.73.102 (mia-mi1-bb1-a9.fl.us)
-	BGP.cluster_list: 94.23.122.41 94.23.122.12 178.32.135.101
-                   via 198.27.73.102 on eth0 [rbx_g2_nc5 2020-10-22 from 94.23.122.46] (100/0) [AS25152i]
-```
-
 - 192.33.4.0/24 (RR = **par-gsw-pb1-nc5**/`ovh_r10` and next AS in the AS path **AS 174**/`cogent_r1`):
 
 ```
@@ -122,39 +73,7 @@ List of prefixes announced by the peers (25 per peer) of ASes 1299, 15169, 174 a
 	BGP.cluster_list: 94.23.122.46 54.36.50.100 54.36.50.195
 ```
 
-- 199.7.83.0/24:
-
-```
-199.7.83.0/24      via 178.32.135.242 on eth0 [rbx_g1_nc5 2020-10-13 from 94.23.122.41] * (100/0) [AS20144i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 32098 20144
-	BGP.next_hop: 178.32.135.242 (dfw-da2-bb1-a9.tx.us)
-	BGP.med: 1
-	BGP.local_pref: 340
-	BGP.community: (16276,37158)
-	BGP.originator_id: 178.32.135.242 (dfw-da2-bb1-a9.tx.us)
-	BGP.cluster_list: 94.23.122.41 94.23.122.12 178.32.135.101
-                   via 178.32.135.242 on eth0 [rbx_g2_nc5 2020-10-13 from 94.23.122.46] (100/0) [AS20144i]
-```
-
 ### Others (DNS Servers, ...)
-
-- Apple:
-
-```
-17.0.0.0/8         via 178.32.135.251 on eth0 [rbx_g1_nc5 2020-10-16 from 94.23.122.41] * (100/0) [AS714i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 714
-	BGP.next_hop: 178.32.135.251 (pao-sv8-bb1-a9.ca.us)
-	BGP.med: 1
-	BGP.local_pref: 320
-	BGP.community: (16276,31756)
-	BGP.originator_id: 178.32.135.251 (pao-sv8-bb1-a9.ca.us)
-	BGP.cluster_list: 94.23.122.41 94.23.122.12 178.32.135.101
-                   via 178.32.135.251 on eth0 [rbx_g2_nc5 2020-10-22 from 94.23.122.46] (100/0) [AS714i]
-```
 
 - Google (without surprise, will reach **AS 15169**/`google_r1` ;  **par-gsw-pb1-nc5**/`ovh_r11` as BGP next-hop):
 
@@ -172,24 +91,9 @@ List of prefixes announced by the peers (25 per peer) of ASes 1299, 15169, 174 a
                    unreachable [rbx_g2_nc5 2020-08-05 from 94.23.122.46] (100/-) [AS15169i]
 ```
 
-- 1.1.1.0/24:
-
-```
-1.1.1.0/24         unreachable [rbx_g1_nc5 2020-10-22 from 94.23.122.41] * (100/-) [AS13335i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 13335
-	BGP.next_hop: 80.249.211.140 (ams-ix.as13335.net)
-	BGP.med: 0
-	BGP.local_pref: 300
-	BGP.aggregator: 141.101.65.1 AS13335
-	BGP.community: (16276,30202)
-	BGP.originator_id: 94.23.122.25 (ams-5-a9.nl.eu)
-	BGP.cluster_list: 94.23.122.41 94.23.122.12
-                   unreachable [rbx_g2_nc5 2020-10-22 from 94.23.122.46] (100/-) [AS13335i]
-```
-
 ## Telia (AS 1299)
+
+Rq: Reach those addresses through London (so is it useful to keep those addresses?)
 
 - 96.17.4.0/22
 - 96.16.192.0/21
@@ -218,13 +122,106 @@ List of prefixes announced by the peers (25 per peer) of ASes 1299, 15169, 174 a
 
 ## Google (AS 15169)
 
-- 8.8.8.0/24
-- 8.8.4.0/24
-- 8.35.200.0/21
-- 8.35.192.0/21
-- 8.34.216.0/21
-- 8.34.208.0/21
-- 74.125.72.0/22
+All these IP addresses through Paris (**par-gsw-pb1-nc5.fr.eu**).
+
+- 8.8.8.0/24:
+```
+8.8.8.0/24         unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 15169
+	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 350
+	BGP.community: (16276,34917)
+	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
+```
+- 8.8.4.0/24:
+```
+8.8.4.0/24         unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 15169
+	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 350
+	BGP.community: (16276,34917)
+	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
+```
+- 8.35.200.0/21:
+```
+8.35.200.0/21      unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 15169
+	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 350
+	BGP.community: (16276,34917)
+	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
+```
+- 8.35.192.0/21:
+```
+8.35.192.0/21      unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 15169
+	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 350
+	BGP.community: (16276,34917)
+	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
+```
+- 8.34.216.0/21:
+```
+8.34.216.0/21      unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 15169
+	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 350
+	BGP.community: (16276,34917)
+	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
+```
+- 8.34.208.0/21:
+```
+8.34.208.0/21      unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 15169
+	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 350
+	BGP.community: (16276,34917)
+	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
+```
+- 74.125.72.0/22:
+```
+74.125.72.0/22     unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 15169
+	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 350
+	BGP.community: (16276,34917)
+	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
+```
 - 74.125.71.0/24
 - 74.125.70.0/24
 - 74.125.69.0/24
@@ -235,7 +232,20 @@ List of prefixes announced by the peers (25 per peer) of ASes 1299, 15169, 174 a
 - 74.125.38.0/24
 - 74.125.31.0/24
 - 74.125.30.0/24
-- 74.125.29.0/24
+- 74.125.29.0/24:
+```
+74.125.29.0/24     unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 15169
+	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 350
+	BGP.community: (16276,34917)
+	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
+```
 - 74.125.28.0/24
 - 74.125.26.0/24
 - 74.125.250.0/24
