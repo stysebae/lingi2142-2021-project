@@ -144,10 +144,10 @@ class OVHTopology(IPTopo):
             IPv4Address(12, 11, 0, 10, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r3, ovh_r9, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "b", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 12, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 12, IPV4_LINK_PREFIX)), igp_cost_value=2)
         self.add_physical_link(ovh_r3, ovh_r7, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "c", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 14, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 14, IPV4_LINK_PREFIX)), igp_cost_value=5)
         self.add_physical_link(ovh_r4, ovh_r5, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "10", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 16, IPV4_LINK_PREFIX)))
@@ -156,16 +156,16 @@ class OVHTopology(IPTopo):
             IPv4Address(12, 11, 0, 18, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r4, ovh_r8, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "14", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 20, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 20, IPV4_LINK_PREFIX)), igp_cost_value=5)
         self.add_physical_link(ovh_r4, ovh_r12, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "16", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 22, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 22, IPV4_LINK_PREFIX)), igp_cost_value=2)
         self.add_physical_link(ovh_r5, telia_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "18", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 24, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 24, IPV4_LINK_PREFIX)), igp_cost_value=21)
         self.add_physical_link(ovh_r6, telia_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1a", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 26, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 26, IPV4_LINK_PREFIX)), igp_cost_value=21)
         self.add_physical_link(ovh_r6, level3_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1b", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 28, IPV4_LINK_PREFIX)))
@@ -174,7 +174,7 @@ class OVHTopology(IPTopo):
             IPv4Address(12, 11, 0, 30, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r7, ovh_r10, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "20", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 32, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 32, IPV4_LINK_PREFIX)), igp_cost_value=3)
         self.add_physical_link(ovh_r8, ovh_r11, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "22", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 34, IPV4_LINK_PREFIX)))
@@ -183,19 +183,19 @@ class OVHTopology(IPTopo):
             IPv4Address(12, 11, 0, 36, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r9, ovh_r10, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "26", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 38, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 38, IPV4_LINK_PREFIX)), igp_cost_value=5)
         self.add_physical_link(ovh_r10, ovh_r11, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "28", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 40, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r10, google_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2a", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 42, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 42, IPV4_LINK_PREFIX)), igp_cost_value=2)
         self.add_physical_link(ovh_r10, cogent_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2b", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 44, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r11, ovh_r12, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2c", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 46, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 46, IPV4_LINK_PREFIX)), igp_cost_value=5)
         self.add_physical_link(ovh_r11, level3_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "30", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 48, IPV4_LINK_PREFIX)))
@@ -204,7 +204,7 @@ class OVHTopology(IPTopo):
             IPv4Address(12, 11, 0, 50, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r11, google_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "34", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 52, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 11, 0, 52, IPV4_LINK_PREFIX)), igp_cost_value=2)
         # Adding eBGP sessions
         ebgp_session(self, ovh_r5, telia_r1, link_type=SHARE)
         ebgp_session(self, ovh_r6, telia_r1, link_type=SHARE)
