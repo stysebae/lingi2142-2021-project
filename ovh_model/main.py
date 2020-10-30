@@ -15,9 +15,10 @@ from ipmininet.cli import IPCLI
 from ipmininet.ipnet import IPNet
 from ipmininet.iptopo import IPTopo
 from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6, AccessList, \
-    bgp_peering, bgp_fullmesh
+    bgp_peering, bgp_fullmesh, RouterConfig
 
 from ip_addresses import IPv4Address, IPv6Address
+from announced_prefixes import GOOGLE_IPV4_ANNOUNCED_PREFIXES
 
 # CONSTANT VALUES
 
@@ -41,64 +42,64 @@ class OVHTopology(IPTopo):
         # Adding routers
         # TODO: hello and dead intervals are wrong on loopback addresses! (Hello 10, Dead 40, Retransmit 5)
         # TODO: hello and dead intervals not configured on some interfaces (example: ovh_r11, eth3)
-        ovh_r1 = self.addRouter("ovh_r1", lo_addresses=[
-            IPv6Address("2023", "a", "1", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(), IPv4Address(12, 10, 1, 1,
-                                                                                                          IPV4_LO_PREFIX).__str__()])
-        ovh_r2 = self.addRouter("ovh_r2",
+        ovh_r1 = self.addRouter("ovh_r1", config=RouterConfig, lo_addresses=[
+            IPv6Address("2023", "a", "1", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
+            IPv4Address(12, 10, 1, 1, IPV4_LO_PREFIX).__str__()])
+        ovh_r2 = self.addRouter("ovh_r2", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "1", "0", "0", "0", "0", "2", IPV6_LO_PREFIX).__str__(),
                                     IPv4Address(12, 10, 1, 2, IPV4_LO_PREFIX).__str__()])
-        ovh_r3 = self.addRouter("ovh_r3",
+        ovh_r3 = self.addRouter("ovh_r3", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "1", "0", "0", "0", "0", "3", IPV6_LO_PREFIX).__str__(),
                                     IPv4Address(12, 10, 1, 3, IPV4_LO_PREFIX).__str__()])
-        ovh_r4 = self.addRouter("ovh_r4",
+        ovh_r4 = self.addRouter("ovh_r4", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "1", "0", "0", "0", "0", "4", IPV6_LO_PREFIX).__str__(),
                                     IPv4Address(12, 10, 1, 4, IPV4_LO_PREFIX).__str__()])
-        ovh_r5 = self.addRouter("ovh_r5",
+        ovh_r5 = self.addRouter("ovh_r5", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "1", "0", "0", "0", "0", "5", IPV6_LO_PREFIX).__str__(),
                                     IPv4Address(12, 10, 1, 5, IPV4_LO_PREFIX).__str__()])
-        ovh_r6 = self.addRouter("ovh_r6",
+        ovh_r6 = self.addRouter("ovh_r6", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "1", "0", "0", "0", "0", "6", IPV6_LO_PREFIX).__str__(),
                                     IPv4Address(12, 10, 1, 6, IPV4_LO_PREFIX).__str__()])
         ovh_r7 = self.addRouter("ovh_r7", lo_addresses=[
-            IPv6Address("2023", "a", "1", "0", "0", "0", "0", "7", IPV6_LO_PREFIX).__str__(), IPv4Address(12, 10, 2, 1,
-                                                                                                          IPV4_LO_PREFIX).__str__()])
-        ovh_r8 = self.addRouter("ovh_r8",
+            IPv6Address("2023", "a", "1", "0", "0", "0", "0", "7", IPV6_LO_PREFIX).__str__(),
+            IPv4Address(12, 10, 2, 1, IPV4_LO_PREFIX).__str__()])
+        ovh_r8 = self.addRouter("ovh_r8", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "1", "0", "0", "0", "0", "8", IPV6_LO_PREFIX).__str__(),
                                     IPv4Address(12, 10, 2, 2, IPV4_LO_PREFIX).__str__()])
         ovh_r9 = self.addRouter("ovh_r9", lo_addresses=[
-            IPv6Address("2023", "a", "1", "0", "0", "0", "0", "9", IPV6_LO_PREFIX).__str__(), IPv4Address(12, 10, 3, 1,
-                                                                                                          IPV4_LO_PREFIX).__str__()])
-        ovh_r10 = self.addRouter("ovh_r10",
+            IPv6Address("2023", "a", "1", "0", "0", "0", "0", "9", IPV6_LO_PREFIX).__str__(),
+            IPv4Address(12, 10, 3, 1, IPV4_LO_PREFIX).__str__()])
+        ovh_r10 = self.addRouter("ovh_r10", config=RouterConfig,
                                  lo_addresses=[
                                      IPv6Address("2023", "a", "1", "0", "0", "0", "0", "a", IPV6_LO_PREFIX).__str__(),
                                      IPv4Address(12, 10, 4, 1, IPV4_LO_PREFIX).__str__()])
-        ovh_r11 = self.addRouter("ovh_r11",
+        ovh_r11 = self.addRouter("ovh_r11", config=RouterConfig,
                                  lo_addresses=[
                                      IPv6Address("2023", "a", "1", "0", "0", "0", "0", "b", IPV6_LO_PREFIX).__str__(),
                                      IPv4Address(12, 10, 4, 2, IPV4_LO_PREFIX).__str__()])
-        ovh_r12 = self.addRouter("ovh_r12",
+        ovh_r12 = self.addRouter("ovh_r12", config=RouterConfig,
                                  lo_addresses=[
                                      IPv6Address("2023", "a", "1", "0", "0", "0", "0", "c", IPV6_LO_PREFIX).__str__(),
                                      IPv4Address(12, 10, 3, 2, IPV4_LO_PREFIX).__str__()])
-        telia_r1 = self.addRouter("telia_r1",
+        telia_r1 = self.addRouter("telia_r1", config=RouterConfig,
                                   lo_addresses=[
                                       IPv6Address("2023", "a", "5", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
                                       IPv4Address(12, 10, 5, 1, IPV4_LO_PREFIX).__str__()])
-        google_r1 = self.addRouter("google_r1",
+        google_r1 = self.addRouter("google_r1", config=RouterConfig,
                                    lo_addresses=[
                                        IPv6Address("2023", "a", "6", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
                                        IPv4Address(12, 10, 6, 1, IPV4_LO_PREFIX).__str__()])
-        cogent_r1 = self.addRouter("cogent_r1",
+        cogent_r1 = self.addRouter("cogent_r1", config=RouterConfig,
                                    lo_addresses=[
                                        IPv6Address("2023", "a", "7", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
                                        IPv4Address(12, 10, 7, 1, IPV4_LO_PREFIX).__str__()])
-        level3_r1 = self.addRouter("level3_r1",
+        level3_r1 = self.addRouter("level3_r1", config=RouterConfig,
                                    lo_addresses=[
                                        IPv6Address("2023", "a", "8", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
                                        IPv4Address(12, 10, 8, 1, IPV4_LO_PREFIX).__str__()])
@@ -205,6 +206,17 @@ class OVHTopology(IPTopo):
         self.add_physical_link(ovh_r11, google_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "34", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 52, IPV4_LINK_PREFIX)), igp_cost_value=2)
+        # Set BGP parameters (according to announced prefixes)
+        al = AccessList(name="all", entries=("any",))
+        # With Google (AS 15169)
+        ovh_r11.get_config(BGP).set_local_pref(350, from_peer=google_r1, matching=(al,))
+        google_r1.get_config(BGP).set_community("16276:34917", from_peer=ovh_r11, matching=(al,))
+        # With Cogent (AS 174)
+        ovh_r11.get_config(BGP).set_local_pref(80, from_peer=cogent_r1, matching=(al,))
+        cogent_r1.get_config(BGP).set_community("16276:10817", from_peer=ovh_r11, matching=(al,))
+        # With Level3 (AS 3356)
+        ovh_r11.get_config(BGP).set_local_pref(100, from_peer=level3_r1, matching=(al,))
+        level3_r1.get_config(BGP).set_community("16276:10217", from_peer=ovh_r11, matching=(al,))
         # Adding eBGP sessions
         ebgp_session(self, ovh_r5, telia_r1, link_type=SHARE)
         ebgp_session(self, ovh_r6, telia_r1, link_type=SHARE)
@@ -282,18 +294,20 @@ class OVHTopology(IPTopo):
         """
         family_ipv4 = AF_INET()
         family_ipv6 = AF_INET6()
+        router_id = "1.1.1."
+        i = 0
         for router in all_routers:
             router.addDaemon(BGP, address_families=(family_ipv4, family_ipv6))
         for router in ovh_routers:
-            router.addDaemon(BGP, family=AF_INET(redistribute=("ospf6", "connected"), ))
-            router.addDaemon(BGP, family=AF_INET6(redistribute=("ospf6", "connected"), ))
+            i += 1
+            router.addDaemon(BGP, routerid=router_id + str(i), family=AF_INET(redistribute=("ospf", "connected"), ))
+            router.addDaemon(BGP, routerid=router_id + str(i), family=AF_INET6(redistribute=("ospf6", "connected"), ))
         # Other ASes advertise specific prefixes
         for router in telia_routers:
-            # TODO: family=AF_INET(networks=(...) or address_families=(_bgp.AF_INET(networks=('1.2.3.0/24',)),)?
             router.addDaemon(BGP, family=AF_INET(networks=("dead:beef::/32",), ))  # TODO: change IP address space
             router.addDaemon(BGP, family=AF_INET6(networks=("dead:beef::/32",), ))
         for router in google_routers:
-            router.addDaemon(BGP, family=AF_INET(networks=("dead:baef::/32",), ))
+            router.addDaemon(BGP, family=GOOGLE_IPV4_ANNOUNCED_PREFIXES)
             router.addDaemon(BGP, family=AF_INET6(networks=("dead:baef::/32",), ))
         for router in cogent_routers:
             router.addDaemon(BGP, family=AF_INET(networks=("dead:bbef::/32",), ))

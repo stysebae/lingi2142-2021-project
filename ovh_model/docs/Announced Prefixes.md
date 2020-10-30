@@ -256,9 +256,35 @@ All these IP addresses through Paris (**par-gsw-pb1-nc5.fr.eu**).
 
 ## Cogent (AS 174)
 
-- 98.159.96.0/22
+- 98.159.96.0/22:
+```
+98.159.96.0/22     unreachable [rbx_g1_nc5 2020-09-08 from 94.23.122.41] * (100/-) [AS174i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 174
+	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 80
+	BGP.community: (174,21001) (174,22013) (16276,10817)
+	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-09-15 from 94.23.12
+```
 - 92.240.5.0/24
-- 91.229.58.0/24
+- 91.229.58.0/24:
+```
+91.229.58.0/24     unreachable [rbx_g1_nc5 2020-09-24 from 94.23.122.41] * (100/-) [AS174i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 174
+	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 80
+	BGP.community: (174,21101) (174,22007) (16276,10817)
+	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-09-24 from 94.23.12
+```
 - 91.229.180.0/24
 - 91.220.175.0/24
 - 91.208.170.0/24
@@ -284,7 +310,20 @@ All these IP addresses through Paris (**par-gsw-pb1-nc5.fr.eu**).
 
 ## Level3 (AS 3356)
 
-- 99.193.251.0/24
+- 99.193.251.0/24:
+```
+99.193.251.0/24    unreachable [rbx_g1_nc5 2020-10-29 from 94.23.122.41] * (100/-) [AS3356i]
+	Type: BGP unicast univ
+	BGP.origin: IGP
+	BGP.as_path: 3356
+	BGP.next_hop: 54.36.50.198 (par-gsw-pb2-nc5.fr.eu)
+	BGP.med: 0
+	BGP.local_pref: 100
+	BGP.community: (3356,3) (3356,22) (3356,100) (3356,123) (3356,575) (3356,2003) (16276,10217)
+	BGP.originator_id: 54.36.50.198 (par-gsw-pb2-nc5.fr.eu)
+	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
+                   unreachable [rbx_g2_nc5 2020-10-29 from 94.23.12
+```
 - 98.159.39.0/24
 - 98.159.38.0/24
 - 98.159.33.0/24
