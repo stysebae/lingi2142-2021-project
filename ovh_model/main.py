@@ -16,6 +16,7 @@ from ipmininet.ipnet import IPNet
 from ipmininet.iptopo import IPTopo
 from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6, AccessList, \
     bgp_peering, bgp_fullmesh, RouterConfig
+from ipmininet.router.config.zebra import AccessListEntry, DENY
 
 from ip_addresses import IPv4Address, IPv6Address
 from announced_prefixes import GOOGLE_IPV4_ANNOUNCED_PREFIXES
@@ -39,6 +40,19 @@ class OVHTopology(IPTopo):
         Build the topology of our OVH network and set up it by adding routers, links, protocols, setting up routers
         reflectors, etc.
         """
+        reserved_addresses = list()
+        reserved_addresses.append(AccessListEntry(["local_loopback", "127.0.0.0/8", "::1/128", DENY]))
+        reserved_addresses.append(AccessListEntry(["local_link", "169.254.0.0/16", "", DENY]))
+        reserved_addresses.append(AccessListEntry(["performance_test", "198.18.0.0/15", "2001:2::/48", DENY]))
+        reserved_addresses.append(AccessListEntry(["iana_reserved", "192.0.0.0/24", "", DENY]))
+        reserved_addresses.append(AccessListEntry(["private_ipv4_10", "10.0.0.0/8", "", DENY]))
+        reserved_addresses.append(AccessListEntry(["private_ipv4_172", "172.16.0.0/12", "", DENY]))
+        reserved_addresses.append(AccessListEntry(["private_ipv4_192", "192.168.0.0/16", "", DENY]))
+        reserved_addresses.append(AccessListEntry(["multicast_reserved", "224.0.0.0/4", "ff00::/8", DENY]))
+        reserved_addresses.append(AccessListEntry(["future_usage_reserved", "240.0.0.0/4", "", DENY]))
+        reserved_addresses.append(AccessListEntry(["limited_broacast", "255.255.255.255/32", "", DENY]))
+        reserved_addresses.append(AccessListEntry(["documentation_reserved", "", "2001:db8::/32", DENY]))
+        self.reserved_addresses_accesslist = AccessList(reserved_addresses)
         # Adding routers
         # TODO: hello and dead intervals are wrong on loopback addresses! (Hello 10, Dead 40, Retransmit 5)
         # TODO: hello and dead intervals not configured on some interfaces (example: ovh_r11, eth3)
@@ -219,11 +233,17 @@ class OVHTopology(IPTopo):
         level3_r1.get_config(BGP).set_community("16276:10217", from_peer=ovh_r11, matching=(al,))
         # Adding eBGP sessions
         ebgp_session(self, ovh_r5, telia_r1, link_type=SHARE)
+        self.deny_reserved_addresses("telia_r5", ovh_r5, telia_r1)
         ebgp_session(self, ovh_r6, telia_r1, link_type=SHARE)
+        self.deny_reserved_addresses("telia_r6", ovh_r6, telia_r1)
         ebgp_session(self, ovh_r6, level3_r1, link_type=SHARE)
+        self.deny_reserved_addresses("level3_r6", ovh_r6, level3_r1)
         ebgp_session(self, ovh_r11, google_r1, link_type=SHARE)
+        self.deny_reserved_addresses("google_r11", ovh_r11, google_r1)
         ebgp_session(self, ovh_r11, cogent_r1, link_type=SHARE)
+        self.deny_reserved_addresses("cogent_r11", ovh_r11, cogent_r1)
         ebgp_session(self, ovh_r11, level3_r1, link_type=SHARE)
+        self.deny_reserved_addresses("level3_r11", ovh_r11, level3_r1)
 
         super().build(*args, **kwargs)
 
@@ -380,6 +400,9 @@ class OVHTopology(IPTopo):
         :param clients_list: (list of RouterDescription) Clients of the router reflector.
         """
         set_rr(self, rr=router_reflector, peers=clients_list)
+
+    def deny_reserved_addresses(self, name, local_router, peer_router):
+        local_router.get_config(BGP).deny(name, peer_router.__str__(), local_router.__str__(), [self.reserved_addresses_accesslist])
 
 
 if __name__ == '__main__':
