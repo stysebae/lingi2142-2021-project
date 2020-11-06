@@ -54,5 +54,3 @@ zone "ovh.com" {
 - `ovh_r12` tries to reach `resolver1` and `resolver2`:
 
 ![ping DNS resolvers](../img/ping_resolvers.png)
-
-BUT! `12.11.0.55` not included in the `ovh_r12`'s Routing Information Base!
