@@ -143,14 +143,14 @@ class OVHTopology(IPTopo):
         ovh_dns_resolver1 = self.addHost("resolver1")
         ovh_dns_resolver2 = self.addHost("resolver2")
         self.add_physical_link(ovh_r7, ovh_dns_resolver1, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36",
-                                                                 IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 54,
-                                                                                                IPV4_LINK_PREFIX)))
+                                                                       IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 54,
+                                                                                                      IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r4, ovh_dns_resolver2, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36",
-                                                                 IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 54,
-                                                                                                IPV4_LINK_PREFIX)))
+                                                                       IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 54,
+                                                                                                      IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r11, ovh_webserver1, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38",
-                                                                 IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 56,
-                                                                                                IPV4_LINK_PREFIX)))
+                                                                     IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 56,
+                                                                                                    IPV4_LINK_PREFIX)))
         ovh_dns_resolver1.addDaemon(Named)
         ovh_dns_resolver2.addDaemon(Named)
         """
@@ -248,7 +248,7 @@ class OVHTopology(IPTopo):
         self.add_physical_link(ovh_r11, google_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "34", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 52, IPV4_LINK_PREFIX)), igp_cost_value=2)
-        #TODO: check commented lines!
+        # TODO: check commented lines!
         """
         # Set BGP parameters (according to announced prefixes)
         al = AccessList(name="all", entries=("any",))
@@ -310,6 +310,7 @@ class OVHTopology(IPTopo):
             router.addDaemon(OSPF)
             router.addDaemon(OSPF6)
 
+    # TODO: to remove because useless?
     def add_ospf_area(self, router1, router2, ospf_area_value):
         """
         Add an OSPF area of a link between two routers (default value: ‘0.0.0.0’).
@@ -320,6 +321,7 @@ class OVHTopology(IPTopo):
         """
         self.addLink(router1, router2, igp_area=ospf_area_value)
 
+    # TODO: to remove because useless?
     def set_ospf_priority(self, link, router, priority_value):
         """
         Change the OSPF priority/chances of a router to be the Designated Router (DR).
@@ -355,7 +357,8 @@ class OVHTopology(IPTopo):
             router.addDaemon(BGP, routerid=router_id + str(i), family=AF_INET6(redistribute=("ospf6", "connected"), ))
         # Other ASes advertise specific prefixes
         for router in telia_routers:
-            router.addDaemon(BGP, family=AF_INET(networks=("dead:beef::/32",), ))  # TODO: change IP address space
+            router.addDaemon(BGP, family=AF_INET(
+                networks=("dead:beef::/32",), ))  # TODO: change IP address space (cf. announced_prefixes.py)
             router.addDaemon(BGP, family=AF_INET6(networks=("dead:beef::/32",), ))
         for router in google_routers:
             router.addDaemon(BGP, family=GOOGLE_IPV4_ANNOUNCED_PREFIXES)
@@ -367,6 +370,7 @@ class OVHTopology(IPTopo):
             router.addDaemon(BGP, family=AF_INET(networks=("dead:bcef::/32",), ))
             router.addDaemon(BGP, family=AF_INET6(networks=("dead:bcef::/32",), ))
 
+    # TODO: to remove because useless?
     def set_bgp_local_pref(self, dest_router, local_pref_value, src_router):
         """
         Set the local-pref BGP attribute.
@@ -380,6 +384,7 @@ class OVHTopology(IPTopo):
         dest_router.get_config(BGP) \
             .set_local_pref(local_pref_value, from_peer=src_router, matching=(al,))
 
+    # TODO: to remove because useless?
     def set_bgp_med(self, src_router, med_value, dest_router):
         """
         Set the MED BGP attribute.
@@ -393,6 +398,7 @@ class OVHTopology(IPTopo):
         src_router.get_config(BGP) \
             .set_med(med_value, to_peer=dest_router, matching=(al,))
 
+    # TODO: to remove because useless?
     def set_ibgp_session(self, router1, router2):
         """
         Register a BGP peering between two nodes router1 and router2.
@@ -402,6 +408,7 @@ class OVHTopology(IPTopo):
         """
         bgp_peering(self, router1, router2)
 
+    # TODO: to remove because useless?
     def set_ibgp_fullmesh(self, routers_list):
         """
         Set a full-mesh set of iBGP peering between a list of n routers (i.e. (n*(n-1)//2) iBGP peering).
@@ -410,6 +417,7 @@ class OVHTopology(IPTopo):
         """
         bgp_fullmesh(self, routers_list)
 
+    # TODO: to remove because useless?
     def set_bgp_community(self, dest_router, community, src_router):
         """
         Set a BGP community.
@@ -433,7 +441,11 @@ class OVHTopology(IPTopo):
         set_rr(self, rr=router_reflector, peers=clients_list)
 
     def deny_reserved_addresses(self, name, local_router, peer_router):
-        local_router.get_config(BGP).deny(name, peer_router.__str__(), local_router.__str__(), [self.reserved_addresses_accesslist])
+        """
+        TODO
+        """
+        local_router.get_config(BGP).deny(name, peer_router.__str__(), local_router.__str__(),
+                                          [self.reserved_addresses_accesslist])
 
 
 if __name__ == '__main__':

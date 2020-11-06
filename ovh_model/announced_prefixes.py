@@ -8,6 +8,7 @@ This file displays IP addresses which are advertised by peers (Google, Cogent, T
 
 from ipmininet.router.config import AF_INET6, AF_INET
 
+#TODO: to continue
 GOOGLE_IPV4_ANNOUNCED_PREFIXES = AF_INET(networks=(
 "8.8.8.0/24", "8.8.4.0/24", "8.35.200.0/21", "8.35.192.0/21", "8.34.216.0/21", "8.34.208.0/21", "74.125.72.0/22",
 "74.125.71.0/24", "74.125.70.0/24", "74.125.69.0/24", "74.125.68.0/24", "74.125.6.0/24", "74.125.44.0/22",
