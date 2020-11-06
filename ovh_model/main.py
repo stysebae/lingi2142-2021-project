@@ -8,6 +8,7 @@ Authors: Sophie Tysebaert and Dimitri Wauters
 This file sets up in Mininet the part of the OVH's network that we have chosen.
 """
 
+
 from mininet.log import lg
 
 import ipmininet
@@ -16,6 +17,8 @@ from ipmininet.ipnet import IPNet
 from ipmininet.iptopo import IPTopo
 from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6, AccessList, \
     bgp_peering, bgp_fullmesh, RouterConfig
+from ipmininet.host.config import Named, ARecord, PTRRecord
+from ipaddress import ip_address
 
 from ip_addresses import IPv4Address, IPv6Address
 from announced_prefixes import GOOGLE_IPV4_ANNOUNCED_PREFIXES
@@ -40,8 +43,6 @@ class OVHTopology(IPTopo):
         reflectors, etc.
         """
         # Adding routers
-        # TODO: hello and dead intervals are wrong on loopback addresses! (Hello 10, Dead 40, Retransmit 5)
-        # TODO: hello and dead intervals not configured on some interfaces (example: ovh_r11, eth3)
         ovh_r1 = self.addRouter("ovh_r1", config=RouterConfig, lo_addresses=[
             IPv6Address("2023", "a", "1", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
             IPv4Address(12, 10, 1, 1, IPV4_LO_PREFIX).__str__()])
@@ -124,6 +125,34 @@ class OVHTopology(IPTopo):
         self.add_router_reflector(ovh_r3, peers_rr2)
         self.add_router_reflector(ovh_r10, peers_rr3)
         self.add_router_reflector(ovh_r8, peers_rr4)
+        # DNS anycast
+        ovh_webserver1 = self.addHost("webserver1")
+        ovh_dns_resolver1 = self.addHost("resolver1")
+        ovh_dns_resolver2 = self.addHost("resolver2")
+        self.add_physical_link(ovh_r7, ovh_dns_resolver1, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36",
+                                                                 IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 54,
+                                                                                                IPV4_LINK_PREFIX)))
+        self.add_physical_link(ovh_r4, ovh_dns_resolver2, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36",
+                                                                 IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 54,
+                                                                                                IPV4_LINK_PREFIX)))
+        self.add_physical_link(ovh_r11, ovh_webserver1, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38",
+                                                                 IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 56,
+                                                                                                IPV4_LINK_PREFIX)))
+        ovh_dns_resolver1.addDaemon(Named)
+        ovh_dns_resolver2.addDaemon(Named)
+        """
+        records = [ARecord(ovh_webserver1, IPv4Address(12, 11, 0, 56, IPV4_LINK_PREFIX).__str__()[:-3], ttl=120)]
+        self.addDNSZone(name="ovh.com", dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
+                        nodes=[ovh_webserver1], records=records)
+        ptr_records = [PTRRecord(IPv4Address(12, 11, 0, 54, IPV4_LINK_PREFIX).__str__()[:-3], ovh_dns_resolver1 +
+                                 ".ns.ovh.com", ttl=120),
+                       PTRRecord(IPv4Address(12, 11, 0, 54, IPV4_LINK_PREFIX).__str__()[:-3], ovh_dns_resolver2 +
+                                 ".ns.ovh.com", ttl=120)]
+        # reverse_domain_name is "f.ip6.arpa"
+        reverse_domain_name = ip_address("12.11.0.0").reverse_pointer[-10:]
+        self.addDNSZone(name=reverse_domain_name, dns_master=ovh_dns_resolver1, records=ptr_records,
+                        ns_domain_name="ns.ovh.com", retry_time=8200)
+        """
         # Adding links
         self.add_physical_link(ovh_r1, ovh_r2, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "0", IPV6_LINK_PREFIX),
@@ -206,6 +235,8 @@ class OVHTopology(IPTopo):
         self.add_physical_link(ovh_r11, google_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "34", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 52, IPV4_LINK_PREFIX)), igp_cost_value=2)
+        #TODO: check commented lines!
+        """
         # Set BGP parameters (according to announced prefixes)
         al = AccessList(name="all", entries=("any",))
         # With Google (AS 15169)
@@ -217,6 +248,7 @@ class OVHTopology(IPTopo):
         # With Level3 (AS 3356)
         ovh_r11.get_config(BGP).set_local_pref(100, from_peer=level3_r1, matching=(al,))
         level3_r1.get_config(BGP).set_community("16276:10217", from_peer=ovh_r11, matching=(al,))
+        """
         # Adding eBGP sessions
         ebgp_session(self, ovh_r5, telia_r1, link_type=SHARE)
         ebgp_session(self, ovh_r6, telia_r1, link_type=SHARE)
