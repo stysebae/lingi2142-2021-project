@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 LINGI2142: Computer Networks: Configuration and Management
 File: udp_server.py
@@ -45,6 +47,6 @@ class SimpleUDPServer:
 
 
 if __name__ == '__main__':
-    server = SimpleUDPServer("127.0.0.1", 53531)
-    # server = SimpleUDPServer("12.11.0.55", 53531)
+    #server = SimpleUDPServer("192.168.1.46", 53)
+    server = SimpleUDPServer("12.11.0.55", 53)
     server.run()

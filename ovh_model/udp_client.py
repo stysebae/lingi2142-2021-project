@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 LINGI2142: Computer Networks: Configuration and Management
 File: udp_server.py
@@ -32,11 +34,11 @@ class SimpleUDPClient:
         self.socket.sendto(bytes_to_send, (self.server_ip_address, self.server_port))
 
     def get_server_response(self):
-        return self.socket.recvfrom(self.buffer_size)[0]
+        return self.socket.recvfrom(self.buffer_size)
 
 
 if __name__ == '__main__':
-    client = SimpleUDPClient(("127.0.0.1", 53531))
-    # client = SimpleUDPServer(("12.11.0.55", 53))
+    # client = SimpleUDPClient(("192.168.1.46", 53))
+    client = SimpleUDPClient(("12.11.0.55", 53))
     client.send("Message sent to a UDP server!")
     print(client.get_server_response())

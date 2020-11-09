@@ -7,6 +7,7 @@ Authors: Sophie Tysebaert and Dimitri Wauters
 
 This file sets up in Mininet the part of the OVH's network that we have chosen.
 """
+from typing import Union
 
 from mininet.log import lg
 
@@ -17,7 +18,7 @@ from ipmininet.iptopo import IPTopo
 from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6, AccessList, \
     bgp_peering, bgp_fullmesh, RouterConfig
 from ipmininet.router.config.zebra import AccessListEntry, DENY
-from ipmininet.host.config import Named, ARecord, PTRRecord
+from ipmininet.host.config import Named, ARecord, PTRRecord, AAAARecord
 from ipaddress import ip_address
 
 from ip_addresses import IPv4Address, IPv6Address
@@ -30,6 +31,8 @@ IPV4_LO_PREFIX = 32
 IPV4_LINK_PREFIX = IPV4_LO_PREFIX - 1
 IPV6_LO_PREFIX = 128
 IPV6_LINK_PREFIX = IPV6_LO_PREFIX - 1
+
+DOMAIN = "ovh.com"
 
 
 class OVHTopology(IPTopo):
@@ -153,19 +156,20 @@ class OVHTopology(IPTopo):
                                                                                                     IPV4_LINK_PREFIX)))
         ovh_dns_resolver1.addDaemon(Named)
         ovh_dns_resolver2.addDaemon(Named)
-        """
-        records = [ARecord(ovh_webserver1, IPv4Address(12, 11, 0, 56, IPV4_LINK_PREFIX).__str__()[:-3], ttl=120)]
-        self.addDNSZone(name="ovh.com", dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
+        records = [ARecord(ovh_webserver1, IPv4Address(12, 11, 0, 57, IPV4_LINK_PREFIX).__str__()[:-3], ttl=120),
+                   AAAARecord(ovh_webserver1, IPv6Address("2023", "b", "0", "0", "0", "0", "0", "39",
+                                                       IPV6_LINK_PREFIX).__str__()[:-4], ttl=120)]
+        self.addDNSZone(name=DOMAIN, dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
                         nodes=[ovh_webserver1], records=records)
-        ptr_records = [PTRRecord(IPv4Address(12, 11, 0, 54, IPV4_LINK_PREFIX).__str__()[:-3], ovh_dns_resolver1 +
-                                 ".ns.ovh.com", ttl=120),
-                       PTRRecord(IPv4Address(12, 11, 0, 54, IPV4_LINK_PREFIX).__str__()[:-3], ovh_dns_resolver2 +
-                                 ".ns.ovh.com", ttl=120)]
-        # reverse_domain_name is "f.ip6.arpa"
+        ptr_records = [PTRRecord(IPv4Address(12, 11, 0, 57, IPV4_LINK_PREFIX).__str__()[:-3], ovh_webserver1 + f".{DOMAIN}", ttl=120),
+                       PTRRecord(IPv6Address("2023", "b", "0", "0", "0", "0", "0", "39", IPV6_LINK_PREFIX).__str__()[:-4],
+                                 ovh_webserver1 + f".{DOMAIN}", ttl=120)]
         reverse_domain_name = ip_address("12.11.0.0").reverse_pointer[-10:]
-        self.addDNSZone(name=reverse_domain_name, dns_master=ovh_dns_resolver1, records=ptr_records,
-                        ns_domain_name="ns.ovh.com", retry_time=8200)
-        """
+        reverse_domain_name_ipv6 = ip_address("2023:b::").reverse_pointer[-10:]
+        self.addDNSZone(name=reverse_domain_name, dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
+                        records=ptr_records, ns_domain_name=DOMAIN, retry_time=8200)
+        self.addDNSZone(name=reverse_domain_name_ipv6, dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
+                        records=ptr_records, ns_domain_name=DOMAIN, retry_time=8200)
         # Adding links
         self.add_physical_link(ovh_r1, ovh_r2, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "0", IPV6_LINK_PREFIX),
