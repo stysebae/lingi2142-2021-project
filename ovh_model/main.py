@@ -16,7 +16,7 @@ from ipmininet.ipnet import IPNet
 from ipmininet.iptopo import IPTopo
 from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6, AccessList, \
     bgp_peering, bgp_fullmesh, RouterConfig
-from ipmininet.router.config.zebra import AccessListEntry, DENY
+from ipmininet.router.config.zebra import AccessListEntry, DENY, PERMIT
 
 from ip_addresses import IPv4Address, IPv6Address
 from announced_prefixes import GOOGLE_IPV4_ANNOUNCED_PREFIXES
@@ -41,17 +41,17 @@ class OVHTopology(IPTopo):
         reflectors, etc.
         """
         reserved_addresses = list()
-        reserved_addresses.append(AccessListEntry(["local_loopback", "127.0.0.0/8", "::1/128", DENY]))
-        reserved_addresses.append(AccessListEntry(["local_link", "169.254.0.0/16", "", DENY]))
-        reserved_addresses.append(AccessListEntry(["performance_test", "198.18.0.0/15", "2001:2::/48", DENY]))
-        reserved_addresses.append(AccessListEntry(["iana_reserved", "192.0.0.0/24", "", DENY]))
-        reserved_addresses.append(AccessListEntry(["private_ipv4_10", "10.0.0.0/8", "", DENY]))
-        reserved_addresses.append(AccessListEntry(["private_ipv4_172", "172.16.0.0/12", "", DENY]))
-        reserved_addresses.append(AccessListEntry(["private_ipv4_192", "192.168.0.0/16", "", DENY]))
-        reserved_addresses.append(AccessListEntry(["multicast_reserved", "224.0.0.0/4", "ff00::/8", DENY]))
-        reserved_addresses.append(AccessListEntry(["future_usage_reserved", "240.0.0.0/4", "", DENY]))
-        reserved_addresses.append(AccessListEntry(["limited_broacast", "255.255.255.255/32", "", DENY]))
-        reserved_addresses.append(AccessListEntry(["documentation_reserved", "", "2001:db8::/32", DENY]))
+        reserved_addresses.append(AccessListEntry(prefix=["local_loopback", "127.0.0.0/8", "::1/128"], action=PERMIT))
+        reserved_addresses.append(AccessListEntry(prefix=["local_link", "169.254.0.0/16", ""], action=PERMIT))
+        reserved_addresses.append(AccessListEntry(prefix=["performance_test", "198.18.0.0/15", "2001:2::/48"], action=PERMIT))
+        reserved_addresses.append(AccessListEntry(prefix=["iana_reserved", "192.0.0.0/24", ""], action=PERMIT))
+        reserved_addresses.append(AccessListEntry(prefix=["private_ipv4_10", "10.0.0.0/8", ""], action=PERMIT))
+        reserved_addresses.append(AccessListEntry(prefix=["private_ipv4_172", "172.16.0.0/12", ""], action=PERMIT))
+        reserved_addresses.append(AccessListEntry(prefix=["private_ipv4_192", "192.168.0.0/16", ""], action=PERMIT))
+        reserved_addresses.append(AccessListEntry(prefix=["multicast_reserved", "224.0.0.0/4", "ff00::/8"], action=PERMIT))
+        reserved_addresses.append(AccessListEntry(prefix=["future_usage_reserved", "240.0.0.0/4", ""], action=PERMIT))
+        reserved_addresses.append(AccessListEntry(prefix=["limited_broacast", "255.255.255.255/32", ""], action=PERMIT))
+        reserved_addresses.append(AccessListEntry(prefix=["documentation_reserved", "", "2001:db8::/32"], action=PERMIT))
         self.reserved_addresses_accesslist = AccessList(reserved_addresses)
         # Adding routers
         # TODO: hello and dead intervals are wrong on loopback addresses! (Hello 10, Dead 40, Retransmit 5)
@@ -402,7 +402,11 @@ class OVHTopology(IPTopo):
         set_rr(self, rr=router_reflector, peers=clients_list)
 
     def deny_reserved_addresses(self, name, local_router, peer_router):
-        local_router.get_config(BGP).deny(name, peer_router.__str__(), local_router.__str__(), [self.reserved_addresses_accesslist])
+        prefix_specific = list()
+        for i in range(25):
+            prefix_specific.append(AccessListEntry(["", "{}/{}".format("0.0.0.0", i), ""], PERMIT))
+        local_router.get_config(BGP).deny(name=name + "_martians", from_peer=peer_router.__str__(), matching=(self.reserved_addresses_accesslist,))
+        local_router.get_config(BGP).permit(name=name + "_specific", from_peer=peer_router.__str__(), matching=(AccessList(prefix_specific),))
 
 
 if __name__ == '__main__':
