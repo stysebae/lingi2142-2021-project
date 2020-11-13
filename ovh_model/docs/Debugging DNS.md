@@ -1,7 +1,6 @@
 # Debugging DNS
 
 - **Enable BIND query logging** on the VM: `sudo rndc querylog` (disable it via the same command)
-
 - **Remove all config files** related to a previous config: `cd /tmp && sudo rm /tmp/**`
 - **Run IPMininet** script (via `tmux` or `tmux a`) and send these queries:
 
