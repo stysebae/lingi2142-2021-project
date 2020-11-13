@@ -40,19 +40,6 @@ class OVHTopology(IPTopo):
         Build the topology of our OVH network and set up it by adding routers, links, protocols, setting up routers
         reflectors, etc.
         """
-        reserved_addresses = list()
-        reserved_addresses.append(AccessListEntry(prefix=["local_loopback", "127.0.0.0/8", "::1/128"], action=PERMIT))
-        reserved_addresses.append(AccessListEntry(prefix=["local_link", "169.254.0.0/16", ""], action=PERMIT))
-        reserved_addresses.append(AccessListEntry(prefix=["performance_test", "198.18.0.0/15", "2001:2::/48"], action=PERMIT))
-        reserved_addresses.append(AccessListEntry(prefix=["iana_reserved", "192.0.0.0/24", ""], action=PERMIT))
-        reserved_addresses.append(AccessListEntry(prefix=["private_ipv4_10", "10.0.0.0/8", ""], action=PERMIT))
-        reserved_addresses.append(AccessListEntry(prefix=["private_ipv4_172", "172.16.0.0/12", ""], action=PERMIT))
-        reserved_addresses.append(AccessListEntry(prefix=["private_ipv4_192", "192.168.0.0/16", ""], action=PERMIT))
-        reserved_addresses.append(AccessListEntry(prefix=["multicast_reserved", "224.0.0.0/4", "ff00::/8"], action=PERMIT))
-        reserved_addresses.append(AccessListEntry(prefix=["future_usage_reserved", "240.0.0.0/4", ""], action=PERMIT))
-        reserved_addresses.append(AccessListEntry(prefix=["limited_broacast", "255.255.255.255/32", ""], action=PERMIT))
-        reserved_addresses.append(AccessListEntry(prefix=["documentation_reserved", "", "2001:db8::/32"], action=PERMIT))
-        self.reserved_addresses_accesslist = AccessList(reserved_addresses)
         # Adding routers
         # TODO: hello and dead intervals are wrong on loopback addresses! (Hello 10, Dead 40, Retransmit 5)
         # TODO: hello and dead intervals not configured on some interfaces (example: ovh_r11, eth3)
@@ -233,17 +220,11 @@ class OVHTopology(IPTopo):
         level3_r1.get_config(BGP).set_community("16276:10217", from_peer=ovh_r11, matching=(al,))
         # Adding eBGP sessions
         ebgp_session(self, ovh_r5, telia_r1, link_type=SHARE)
-        self.deny_reserved_addresses("telia_r5", ovh_r5, telia_r1)
         ebgp_session(self, ovh_r6, telia_r1, link_type=SHARE)
-        self.deny_reserved_addresses("telia_r6", ovh_r6, telia_r1)
         ebgp_session(self, ovh_r6, level3_r1, link_type=SHARE)
-        self.deny_reserved_addresses("level3_r6", ovh_r6, level3_r1)
         ebgp_session(self, ovh_r11, google_r1, link_type=SHARE)
-        self.deny_reserved_addresses("google_r11", ovh_r11, google_r1)
         ebgp_session(self, ovh_r11, cogent_r1, link_type=SHARE)
-        self.deny_reserved_addresses("cogent_r11", ovh_r11, cogent_r1)
         ebgp_session(self, ovh_r11, level3_r1, link_type=SHARE)
-        self.deny_reserved_addresses("level3_r11", ovh_r11, level3_r1)
 
         super().build(*args, **kwargs)
 
@@ -400,13 +381,6 @@ class OVHTopology(IPTopo):
         :param clients_list: (list of RouterDescription) Clients of the router reflector.
         """
         set_rr(self, rr=router_reflector, peers=clients_list)
-
-    def deny_reserved_addresses(self, name, local_router, peer_router):
-        prefix_specific = list()
-        for i in range(25):
-            prefix_specific.append(AccessListEntry(["", "{}/{}".format("0.0.0.0", i), ""], PERMIT))
-        local_router.get_config(BGP).deny(name=name + "_martians", from_peer=peer_router.__str__(), matching=(self.reserved_addresses_accesslist,))
-        local_router.get_config(BGP).permit(name=name + "_specific", from_peer=peer_router.__str__(), matching=(AccessList(prefix_specific),))
 
 
 if __name__ == '__main__':
