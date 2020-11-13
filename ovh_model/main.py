@@ -7,6 +7,7 @@ Authors: Sophie Tysebaert and Dimitri Wauters
 
 This file sets up in Mininet the part of the OVH's network that we have chosen.
 """
+from typing import Union
 
 from mininet.log import lg
 
@@ -17,6 +18,8 @@ from ipmininet.iptopo import IPTopo
 from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6, AccessList, \
     bgp_peering, bgp_fullmesh, RouterConfig
 from ipmininet.router.config.zebra import AccessListEntry, DENY, PERMIT
+from ipmininet.host.config import Named, ARecord, PTRRecord, AAAARecord
+from ipaddress import ip_address
 
 from ip_addresses import IPv4Address, IPv6Address
 from announced_prefixes import GOOGLE_IPV4_ANNOUNCED_PREFIXES
@@ -28,6 +31,8 @@ IPV4_LO_PREFIX = 32
 IPV4_LINK_PREFIX = IPV4_LO_PREFIX - 1
 IPV6_LO_PREFIX = 128
 IPV6_LINK_PREFIX = IPV6_LO_PREFIX - 1
+
+DOMAIN = "ovh.com"
 
 
 class OVHTopology(IPTopo):
@@ -41,8 +46,6 @@ class OVHTopology(IPTopo):
         reflectors, etc.
         """
         # Adding routers
-        # TODO: hello and dead intervals are wrong on loopback addresses! (Hello 10, Dead 40, Retransmit 5)
-        # TODO: hello and dead intervals not configured on some interfaces (example: ovh_r11, eth3)
         ovh_r1 = self.addRouter("ovh_r1", config=RouterConfig, lo_addresses=[
             IPv6Address("2023", "a", "1", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
             IPv4Address(12, 10, 1, 1, IPV4_LO_PREFIX).__str__()])
@@ -125,6 +128,28 @@ class OVHTopology(IPTopo):
         self.add_router_reflector(ovh_r3, peers_rr2)
         self.add_router_reflector(ovh_r10, peers_rr3)
         self.add_router_reflector(ovh_r8, peers_rr4)
+        # DNS anycast
+        ovh_webserver1 = self.addHost("webserver1")
+        ovh_dns_resolver1 = self.addHost("resolver1")
+        ovh_dns_resolver2 = self.addHost("resolver2")
+        self.add_physical_link(ovh_r7, ovh_dns_resolver1, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36",
+                                                                       IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 54,
+                                                                                                      IPV4_LINK_PREFIX)))
+        self.add_physical_link(ovh_r4, ovh_dns_resolver2, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36",
+                                                                       IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 54,
+                                                                                                      IPV4_LINK_PREFIX)))
+        self.add_physical_link(ovh_r11, ovh_webserver1, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38",
+                                                                     IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 56,
+                                                                                                    IPV4_LINK_PREFIX)))
+        ovh_dns_resolver1.addDaemon(Named)
+        ovh_dns_resolver2.addDaemon(Named)
+        self.addDNSZone(name=DOMAIN, dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
+                        nodes=[ovh_webserver1])
+        reverse_domain_name_ipv6 = ip_address("2023::").reverse_pointer[-10:]
+        # adding a missing PTR record
+        ptr_record_ipv6 = PTRRecord(IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38",IPV6_LINK_PREFIX).__str__()[:-4], ovh_webserver1 + f".{DOMAIN}")
+        self.addDNSZone(name=reverse_domain_name_ipv6, dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
+                        ns_domain_name=DOMAIN, records=[ptr_record_ipv6])
         # Adding links
         self.add_physical_link(ovh_r1, ovh_r2, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "0", IPV6_LINK_PREFIX),
@@ -207,6 +232,8 @@ class OVHTopology(IPTopo):
         self.add_physical_link(ovh_r11, google_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "34", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 52, IPV4_LINK_PREFIX)), igp_cost_value=2)
+        # TODO: check commented lines!
+        """
         # Set BGP parameters (according to announced prefixes)
         al = AccessList(name="all", entries=("any",))
         # With Google (AS 15169)
@@ -218,6 +245,7 @@ class OVHTopology(IPTopo):
         # With Level3 (AS 3356)
         ovh_r11.get_config(BGP).set_local_pref(100, from_peer=level3_r1, matching=(al,))
         level3_r1.get_config(BGP).set_community("16276:10217", from_peer=ovh_r11, matching=(al,))
+        """
         # Adding eBGP sessions
         ebgp_session(self, ovh_r5, telia_r1, link_type=SHARE)
         ebgp_session(self, ovh_r6, telia_r1, link_type=SHARE)
@@ -260,6 +288,7 @@ class OVHTopology(IPTopo):
             router.addDaemon(OSPF)
             router.addDaemon(OSPF6)
 
+    # TODO: to remove because useless?
     def add_ospf_area(self, router1, router2, ospf_area_value):
         """
         Add an OSPF area of a link between two routers (default value: ‘0.0.0.0’).
@@ -270,6 +299,7 @@ class OVHTopology(IPTopo):
         """
         self.addLink(router1, router2, igp_area=ospf_area_value)
 
+    # TODO: to remove because useless?
     def set_ospf_priority(self, link, router, priority_value):
         """
         Change the OSPF priority/chances of a router to be the Designated Router (DR).
@@ -305,7 +335,8 @@ class OVHTopology(IPTopo):
             router.addDaemon(BGP, routerid=router_id + str(i), family=AF_INET6(redistribute=("ospf6", "connected"), ))
         # Other ASes advertise specific prefixes
         for router in telia_routers:
-            router.addDaemon(BGP, family=AF_INET(networks=("dead:beef::/32",), ))  # TODO: change IP address space
+            router.addDaemon(BGP, family=AF_INET(
+                networks=("dead:beef::/32",), ))  # TODO: change IP address space (cf. announced_prefixes.py)
             router.addDaemon(BGP, family=AF_INET6(networks=("dead:beef::/32",), ))
         for router in google_routers:
             router.addDaemon(BGP, family=GOOGLE_IPV4_ANNOUNCED_PREFIXES)
@@ -317,6 +348,7 @@ class OVHTopology(IPTopo):
             router.addDaemon(BGP, family=AF_INET(networks=("dead:bcef::/32",), ))
             router.addDaemon(BGP, family=AF_INET6(networks=("dead:bcef::/32",), ))
 
+    # TODO: to remove because useless?
     def set_bgp_local_pref(self, dest_router, local_pref_value, src_router):
         """
         Set the local-pref BGP attribute.
@@ -330,6 +362,7 @@ class OVHTopology(IPTopo):
         dest_router.get_config(BGP) \
             .set_local_pref(local_pref_value, from_peer=src_router, matching=(al,))
 
+    # TODO: to remove because useless?
     def set_bgp_med(self, src_router, med_value, dest_router):
         """
         Set the MED BGP attribute.
@@ -343,6 +376,7 @@ class OVHTopology(IPTopo):
         src_router.get_config(BGP) \
             .set_med(med_value, to_peer=dest_router, matching=(al,))
 
+    # TODO: to remove because useless?
     def set_ibgp_session(self, router1, router2):
         """
         Register a BGP peering between two nodes router1 and router2.
@@ -352,6 +386,7 @@ class OVHTopology(IPTopo):
         """
         bgp_peering(self, router1, router2)
 
+    # TODO: to remove because useless?
     def set_ibgp_fullmesh(self, routers_list):
         """
         Set a full-mesh set of iBGP peering between a list of n routers (i.e. (n*(n-1)//2) iBGP peering).
@@ -360,6 +395,7 @@ class OVHTopology(IPTopo):
         """
         bgp_fullmesh(self, routers_list)
 
+    # TODO: to remove because useless?
     def set_bgp_community(self, dest_router, community, src_router):
         """
         Set a BGP community.
