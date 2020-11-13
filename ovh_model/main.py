@@ -156,20 +156,13 @@ class OVHTopology(IPTopo):
                                                                                                     IPV4_LINK_PREFIX)))
         ovh_dns_resolver1.addDaemon(Named)
         ovh_dns_resolver2.addDaemon(Named)
-        records = [ARecord(ovh_webserver1, IPv4Address(12, 11, 0, 57, IPV4_LINK_PREFIX).__str__()[:-3], ttl=120),
-                   AAAARecord(ovh_webserver1, IPv6Address("2023", "b", "0", "0", "0", "0", "0", "39",
-                                                       IPV6_LINK_PREFIX).__str__()[:-4], ttl=120)]
         self.addDNSZone(name=DOMAIN, dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
-                        nodes=[ovh_webserver1], records=records)
-        ptr_records = [PTRRecord(IPv4Address(12, 11, 0, 57, IPV4_LINK_PREFIX).__str__()[:-3], ovh_webserver1 + f".{DOMAIN}", ttl=120),
-                       PTRRecord(IPv6Address("2023", "b", "0", "0", "0", "0", "0", "39", IPV6_LINK_PREFIX).__str__()[:-4],
-                                 ovh_webserver1 + f".{DOMAIN}", ttl=120)]
-        reverse_domain_name = ip_address("12.11.0.0").reverse_pointer[-10:]
-        reverse_domain_name_ipv6 = ip_address("2023:b::").reverse_pointer[-10:]
-        self.addDNSZone(name=reverse_domain_name, dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
-                        records=ptr_records, ns_domain_name=DOMAIN, retry_time=8200)
+                        nodes=[ovh_webserver1])
+        reverse_domain_name_ipv6 = ip_address("2023::").reverse_pointer[-10:]
+        # adding a missing PTR record
+        ptr_record_ipv6 = PTRRecord(IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38",IPV6_LINK_PREFIX).__str__()[:-4], ovh_webserver1 + f".{DOMAIN}")
         self.addDNSZone(name=reverse_domain_name_ipv6, dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
-                        records=ptr_records, ns_domain_name=DOMAIN, retry_time=8200)
+                        ns_domain_name=DOMAIN, records=[ptr_record_ipv6])
         # Adding links
         self.add_physical_link(ovh_r1, ovh_r2, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "0", IPV6_LINK_PREFIX),
