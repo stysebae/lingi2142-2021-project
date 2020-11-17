@@ -120,14 +120,16 @@ class OVHTopology(IPTopo):
         self.addAS(4, (level3_r1,))
         self.addAS(5, (google_r1,))
         # Configuring RRs (two-layers hierarchy)
-        peers_rr1 = [ovh_r3, ovh_r10, ovh_r8]
-        peers_rr2 = [ovh_r1, ovh_r2, ovh_r5]
-        peers_rr3 = [ovh_r9, ovh_r11, ovh_r12]
-        peers_rr4 = [ovh_r4, ovh_r6]
-        self.add_router_reflector(ovh_r7, peers_rr1)
-        self.add_router_reflector(ovh_r3, peers_rr2)
-        self.add_router_reflector(ovh_r10, peers_rr3)
-        self.add_router_reflector(ovh_r8, peers_rr4)
+        # First layer RR : R7 and R8
+        # Second layer RR : R3 and R10
+        peers_rr1 = [ovh_r7, ovh_r8, ovh_r10] + [ovh_r1, ovh_r2, ovh_r5, ovh_r4, ovh_r6] # ovh_r3 - Second layer
+        peers_rr2 = [ovh_r3, ovh_r8, ovh_r10] + [ovh_r1, ovh_r2, ovh_r5, ovh_r4, ovh_r6] # ovh_r7 - First layer
+        peers_rr3 = [ovh_r3, ovh_r7, ovh_r10] + [ovh_r9, ovh_r11, ovh_r12] # ovh_r8 - First layer
+        peers_rr4 = [ovh_r3, ovh_r7, ovh_r8] + [ovh_r9, ovh_r11, ovh_r12] # ovh_r10 - Second layer
+        self.add_router_reflector(ovh_r3, peers_rr1)
+        self.add_router_reflector(ovh_r7, peers_rr2)
+        self.add_router_reflector(ovh_r8, peers_rr3)
+        self.add_router_reflector(ovh_r10, peers_rr4)
         # DNS anycast
         ovh_webserver1 = self.addHost("webserver1")
         ovh_dns_resolver1 = self.addHost("resolver1")
