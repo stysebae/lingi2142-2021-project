@@ -191,10 +191,10 @@ class OVHTopology(IPTopo):
             IPv4Address(12, 11, 0, 22, IPV4_LINK_PREFIX)), igp_cost_value=2)
         self.add_physical_link(ovh_r5, telia_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "18", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 24, IPV4_LINK_PREFIX)), igp_cost_value=21)
+            IPv4Address(12, 11, 0, 24, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r6, telia_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1a", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 26, IPV4_LINK_PREFIX)), igp_cost_value=21)
+            IPv4Address(12, 11, 0, 26, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r6, level3_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1b", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 28, IPV4_LINK_PREFIX)))
