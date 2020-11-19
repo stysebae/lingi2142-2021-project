@@ -69,9 +69,6 @@ def advertise_google():
     child.expect("google_r1#")
     send_command("configure terminal")
 
-    """send_command("interface lo")
-    send_command("ip address 8.8.8.8/24")"""
-
     send_command("router bgp 5")
     send_command("network 8.8.8.0 mask 255.255.255.0")
 
