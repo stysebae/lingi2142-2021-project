@@ -27,6 +27,8 @@ from announced_prefixes import GOOGLE_IPV4_ANNOUNCED_PREFIXES
 # CONSTANT VALUES
 
 # Links and Loopback addresses
+from ovh_model.announced_prefixes import COGENT_IPV4_ANNOUNCED_PREFIXES, LEVEL3_IPV4_ANNOUNCED_PREFIXES
+
 IPV4_LO_PREFIX = 32
 IPV4_LINK_PREFIX = IPV4_LO_PREFIX - 1
 IPV6_LO_PREFIX = 128
@@ -233,8 +235,6 @@ class OVHTopology(IPTopo):
         self.add_physical_link(ovh_r11, google_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "34", IPV6_LINK_PREFIX),
             IPv4Address(12, 11, 0, 52, IPV4_LINK_PREFIX)), igp_cost_value=2)
-        # TODO: check commented lines!
-        """
         # Set BGP parameters (according to announced prefixes)
         al = AccessList(name="all", entries=("any",))
         # With Google (AS 15169)
@@ -246,7 +246,6 @@ class OVHTopology(IPTopo):
         # With Level3 (AS 3356)
         ovh_r11.get_config(BGP).set_local_pref(100, from_peer=level3_r1, matching=(al,))
         level3_r1.get_config(BGP).set_community("16276:10217", from_peer=ovh_r11, matching=(al,))
-        """
         # Adding eBGP sessions
         ebgp_session(self, ovh_r5, telia_r1)
         ebgp_session(self, ovh_r6, telia_r1)
@@ -314,20 +313,13 @@ class OVHTopology(IPTopo):
             i += 1
             router.addDaemon(BGP, routerid=router_id + str(i), family=AF_INET(redistribute=("ospf", "connected"), ))
             router.addDaemon(BGP, routerid=router_id + str(i), family=AF_INET6(redistribute=("ospf6", "connected"), ))
-        # Other ASes advertise specific prefixes
-        for router in telia_routers:
-            router.addDaemon(BGP, family=AF_INET(
-                networks=("dead:beef::/32",), ))  # TODO: change IP address space (cf. announced_prefixes.py)
-            router.addDaemon(BGP, family=AF_INET6(networks=("dead:beef::/32",), ))
+        # Other AS advertise specific prefixes
         for router in google_routers:
             router.addDaemon(BGP, family=GOOGLE_IPV4_ANNOUNCED_PREFIXES)
-            router.addDaemon(BGP, family=AF_INET6(networks=("dead:baef::/32",), ))
         for router in cogent_routers:
-            router.addDaemon(BGP, family=AF_INET(networks=("dead:bbef::/32",), ))
-            router.addDaemon(BGP, family=AF_INET6(networks=("dead:bbef::/32",), ))
+            router.addDaemon(BGP, family=COGENT_IPV4_ANNOUNCED_PREFIXES)
         for router in level3_routers:
-            router.addDaemon(BGP, family=AF_INET(networks=("dead:bcef::/32",), ))
-            router.addDaemon(BGP, family=AF_INET6(networks=("dead:bcef::/32",), ))
+            router.addDaemon(BGP, family=LEVEL3_IPV4_ANNOUNCED_PREFIXES)
 
     def add_router_reflector(self, router_reflector, clients_list):
         """

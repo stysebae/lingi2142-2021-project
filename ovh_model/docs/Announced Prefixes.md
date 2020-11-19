@@ -101,7 +101,7 @@ prefixes are: 96.17.4.0/22, 96.16.192.0/21, 95.101.133.0/24, 92.241.220.0/22, 92
 
 ## Google (AS 15169)
 
-All the IP prefixes announced are reached via **par-gsw-pb1-nc5.fr.eu** (`ovh_r10` or `ovh_r11`) and have the same
+All the IP prefixes announced are reached via **par-gsw-pb1-nc5.fr.eu** (`ovh_r11`) and have the same
 attributes values:
 
 - 8.8.8.0/24:
