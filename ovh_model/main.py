@@ -7,7 +7,6 @@ Authors: Sophie Tysebaert and Dimitri Wauters
 
 This file sets up in Mininet the part of the OVH's network that we have chosen.
 """
-from typing import Union
 
 from mininet.log import lg
 

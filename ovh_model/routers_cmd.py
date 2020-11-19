@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+"""
+LINGI2142: Computer Networks: Configuration and Management
+File: routers_cmd.py
+Authors: Sophie Tysebaert and Dimitri Wauters
+
+This file executes automatically FRRouting commands in order to configure routers.
+"""
+
 import pexpect
 from os import sys
 
