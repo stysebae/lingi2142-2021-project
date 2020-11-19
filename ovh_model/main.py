@@ -112,18 +112,18 @@ class OVHTopology(IPTopo):
         # Adding protocols to routers
         self.add_ospf(all_routers)
         self.add_bgp(all_routers, [ovh_r5, ovh_r6, ovh_r10, ovh_r11], [telia_r1], [google_r1], [cogent_r1], [level3_r1])
-        # Adding ASes ownerships
+        # Adding AS ownerships
         self.addAS(1,
                    (ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r7, ovh_r8, ovh_r9, ovh_r10, ovh_r11, ovh_r12))
         self.addAS(2, (telia_r1,))
         self.addAS(3, (cogent_r1,))
         self.addAS(4, (level3_r1,))
         self.addAS(5, (google_r1,))
-        # Configuring RRs (two-layers hierarchy)
+        # Configuring RRs
         peers_rr1 = [ovh_r7, ovh_r8, ovh_r6] + [ovh_r1, ovh_r2, ovh_r4, ovh_r5]  # ovh_r3
-        peers_rr2 = [ovh_r3, ovh_r8, ovh_r6] + [ovh_r1, ovh_r2, ovh_r4, ovh_r5]  # ovh_r6
-        peers_rr3 = [ovh_r3, ovh_r7, ovh_r6] + [ovh_r9, ovh_r10, ovh_r11, ovh_r12]  # ovh_r7
-        peers_rr4 = [ovh_r3, ovh_r7, ovh_r8] + [ovh_r9, ovh_r10, ovh_r11, ovh_r12]  # ovh_r8
+        peers_rr2 = [ovh_r3, ovh_r8, ovh_r7] + [ovh_r1, ovh_r2, ovh_r4, ovh_r5]  # ovh_r6
+        peers_rr3 = [ovh_r3, ovh_r8, ovh_r6] + [ovh_r9, ovh_r10, ovh_r11, ovh_r12]  # ovh_r7
+        peers_rr4 = [ovh_r3, ovh_r7, ovh_r6] + [ovh_r9, ovh_r10, ovh_r11, ovh_r12]  # ovh_r8
         self.add_router_reflector(ovh_r3, peers_rr1)
         self.add_router_reflector(ovh_r6, peers_rr2)
         self.add_router_reflector(ovh_r7, peers_rr3)
@@ -145,8 +145,7 @@ class OVHTopology(IPTopo):
         ovh_dns_resolver2.addDaemon(Named)
         self.addDNSZone(name=DOMAIN, dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
                         nodes=[ovh_webserver1])
-        reverse_domain_name_ipv6 = ip_address("2023::").reverse_pointer[-10:]
-        # adding a missing PTR record
+        reverse_domain_name_ipv6 = ip_address("2023::").reverse_pointer[-10:]  # adding a missing PTR record
         ptr_record_ipv6 = PTRRecord(
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38", IPV6_LINK_PREFIX).__str__()[:-4],
             ovh_webserver1 + f".{DOMAIN}")
