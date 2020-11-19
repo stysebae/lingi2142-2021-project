@@ -48,7 +48,7 @@ class OVHTopology(IPTopo):
         # Adding routers
         ovh_r1 = self.addRouter("ovh_r1", config=RouterConfig, lo_addresses=[
             IPv6Address("2023", "a", "c", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
-            IPv4Address(12, 10, 1, 1, IPV4_LO_PREFIX).__str__()])
+            IPv4Address(12, 10, 12, 1, IPV4_LO_PREFIX).__str__()])
         ovh_r2 = self.addRouter("ovh_r2", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "c", "0", "0", "0", "0", "2", IPV6_LO_PREFIX).__str__(),
@@ -120,10 +120,10 @@ class OVHTopology(IPTopo):
         self.addAS(4, (level3_r1,))
         self.addAS(5, (google_r1,))
         # Configuring RRs (two-layers hierarchy)
-        peers_rr1 = [ovh_r7, ovh_r8, ovh_r6] + [ovh_r1, ovh_r2, ovh_r4, ovh_r5] # ovh_r3
-        peers_rr2 = [ovh_r3, ovh_r8, ovh_r6] + [ovh_r1, ovh_r2, ovh_r4, ovh_r5] # ovh_r6
-        peers_rr3 = [ovh_r3, ovh_r7, ovh_r6] + [ovh_r9, ovh_r10, ovh_r11, ovh_r12] # ovh_r7
-        peers_rr4 = [ovh_r3, ovh_r7, ovh_r8] + [ovh_r9, ovh_r10, ovh_r11, ovh_r12] # ovh_r8
+        peers_rr1 = [ovh_r7, ovh_r8, ovh_r6] + [ovh_r1, ovh_r2, ovh_r4, ovh_r5]  # ovh_r3
+        peers_rr2 = [ovh_r3, ovh_r8, ovh_r6] + [ovh_r1, ovh_r2, ovh_r4, ovh_r5]  # ovh_r6
+        peers_rr3 = [ovh_r3, ovh_r7, ovh_r6] + [ovh_r9, ovh_r10, ovh_r11, ovh_r12]  # ovh_r7
+        peers_rr4 = [ovh_r3, ovh_r7, ovh_r8] + [ovh_r9, ovh_r10, ovh_r11, ovh_r12]  # ovh_r8
         self.add_router_reflector(ovh_r3, peers_rr1)
         self.add_router_reflector(ovh_r6, peers_rr2)
         self.add_router_reflector(ovh_r7, peers_rr3)
@@ -147,7 +147,9 @@ class OVHTopology(IPTopo):
                         nodes=[ovh_webserver1])
         reverse_domain_name_ipv6 = ip_address("2023::").reverse_pointer[-10:]
         # adding a missing PTR record
-        ptr_record_ipv6 = PTRRecord(IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38",IPV6_LINK_PREFIX).__str__()[:-4], ovh_webserver1 + f".{DOMAIN}")
+        ptr_record_ipv6 = PTRRecord(
+            IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38", IPV6_LINK_PREFIX).__str__()[:-4],
+            ovh_webserver1 + f".{DOMAIN}")
         self.addDNSZone(name=reverse_domain_name_ipv6, dns_master=ovh_dns_resolver1, dns_slaves=[ovh_dns_resolver2],
                         ns_domain_name=DOMAIN, records=[ptr_record_ipv6])
         # Adding links
@@ -290,28 +292,6 @@ class OVHTopology(IPTopo):
             router.addDaemon(OSPF)
             router.addDaemon(OSPF6)
 
-    # TODO: to remove because useless?
-    def add_ospf_area(self, router1, router2, ospf_area_value):
-        """
-        Add an OSPF area of a link between two routers (default value: ‘0.0.0.0’).
-
-        :param router1: (RouterDescription) A first router.
-        :param router2: (RouterDescription) A second router connected to the first one with an OSPF area on this link.
-        :param ospf_area_value: (str) The OSPF area of the link.
-        """
-        self.addLink(router1, router2, igp_area=ospf_area_value)
-
-    # TODO: to remove because useless?
-    def set_ospf_priority(self, link, router, priority_value):
-        """
-        Change the OSPF priority/chances of a router to be the Designated Router (DR).
-
-        :param link: (LinkDescription) Link on which we want to set an IP address.
-        :param router: (RouterDescription) Router connected to link on which apply IP addresses (on a given interface).
-        :param priority_value: (int) Priority value (highest = best chances to be designated).
-        """
-        link[router].addParams(ospf_priority=priority_value)
-
     def add_bgp(self, all_routers, ovh_routers, telia_routers, google_routers, cogent_routers, level3_routers):
         """
         Add Border Gateway Protocol (BGP) to the routers and specify which prefixes they advertise (both for IPv4
@@ -349,67 +329,6 @@ class OVHTopology(IPTopo):
         for router in level3_routers:
             router.addDaemon(BGP, family=AF_INET(networks=("dead:bcef::/32",), ))
             router.addDaemon(BGP, family=AF_INET6(networks=("dead:bcef::/32",), ))
-
-    # TODO: to remove because useless?
-    def set_bgp_local_pref(self, dest_router, local_pref_value, src_router):
-        """
-        Set the local-pref BGP attribute.
-
-        :param dest_router: (RouterDescription) Destination router influenced by local-pref.
-        :param local_pref_value: (int) Local-pref value (if high, it will be preferred).
-        :param src_router: (RouterDescription) Source router influenced by local-pref.
-        """
-        al = AccessList(name='all',
-                        entries=('any',))  # Add an access list to "any" (this can be an IP prefix or address instead)
-        dest_router.get_config(BGP) \
-            .set_local_pref(local_pref_value, from_peer=src_router, matching=(al,))
-
-    # TODO: to remove because useless?
-    def set_bgp_med(self, src_router, med_value, dest_router):
-        """
-        Set the MED BGP attribute.
-
-        :param src_router: (RouterDescription) Source router whose link to dest_router has a MED value.
-        :param med_value: (int) MED value (if high, it will be avoided if possible).
-        :param dest_router: (RouterDescription) Destination router whose link to dest_router has a MED value.
-        """
-        al = AccessList(name='all',
-                        entries=('any',))  # Add an access list to "any" (this can be an IP prefix or address instead)
-        src_router.get_config(BGP) \
-            .set_med(med_value, to_peer=dest_router, matching=(al,))
-
-    # TODO: to remove because useless?
-    def set_ibgp_session(self, router1, router2):
-        """
-        Register a BGP peering between two nodes router1 and router2.
-
-        :param router1: (RouterDescription) First router.
-        :param router2: (RouterDescription) Second router to peer.
-        """
-        bgp_peering(self, router1, router2)
-
-    # TODO: to remove because useless?
-    def set_ibgp_fullmesh(self, routers_list):
-        """
-        Set a full-mesh set of iBGP peering between a list of n routers (i.e. (n*(n-1)//2) iBGP peering).
-
-        :param routers_list: (list of RouterDescription) Routers on which a full-mesh iBGP peering is set.
-        """
-        bgp_fullmesh(self, routers_list)
-
-    # TODO: to remove because useless?
-    def set_bgp_community(self, dest_router, community, src_router):
-        """
-        Set a BGP community.
-
-        :param dest_router: (RouterDescription) Destination router on which BGP community will be applied.
-        :param community: (str) The BGP community value.
-        :param src_router: (RouterDescription) Source router influenced by the BGP community.
-        """
-        al = AccessList(name='all',
-                        entries=('any',))  # Add an access list to "any" (this can be an IP prefix or address instead)
-        dest_router.get_config(BGP) \
-            .set_community(community, from_peer=src_router, matching=(al,))
 
     def add_router_reflector(self, router_reflector, clients_list):
         """
