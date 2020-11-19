@@ -3,15 +3,16 @@
 ## IPv4
 
 - **Each city has its own subnet**.
-- We use the public IP addresses range 12.0.0.0, as following:
+- We use the public IP addresses range 12.0.0.0/8, as following:
 
   | Location           | IP Addresses range | Loopback Addresses |
   |--------------------|--------------------|--------------------|
   | *Loopback Addresses* | 12.10.c.x/32       |                    |
-  | Frankfurt          | 12.11.0.0/24       | 12.10.11.x/32       |
-  | Roubaix            | 12.12.0.0/24       | 12.10.12.x/32       |
-  | Strasbourg         | 12.13.0.0/24       | 12.10.13.x/32       |
-  | Paris              | 12.14.0.0/24       | 12.10.14.x/32       |
+    | Routers communication | 12.11.0.x/31       |                    |
+  | Frankfurt subnet         | 12.12.0.0/24       | 12.10.12.x/32       |
+  | Roubaix subnet            | 12.13.0.0/24       | 12.10.13.x/32       |
+  | Strasbourg subnet         | 12.14.0.0/24       | 12.10.14.x/32       |
+  | Paris subnet              | 12.15.0.0/24       | 12.10.15.x/32       |
 
   A few comments about this choice:
   - the format of the loopback addresses is 12.10.c.x/32 where *c* indicates the city ID and *x* the interface ID. Because we do not need more than one loopback address, its mask is /32.
@@ -38,13 +39,14 @@
 
   | Location           | IP Addresses range    | Loopback Addresses      |
   |--------------------|-----------------------|-------------------------|
-  | *Loopback Addresses* | 2023:​​a:C::x/128 |                         |
-  | Frankfurt          | 2023:​b::/48 | 2023:​a:​b::x/128 |
-  | Roubaix            | 2023:​c::/48 | 2023:​a:​c::x/128 |
-  | Strasbourg         | 2023:​d::/48 | 2023:​a:​d::x/128 |
-  | Paris              | 2023:​e::/48 | 2023:​a:​e::x/128 |
+  | *Loopback Addresses* | 2023:​a:C::x/128 |                         |
+    | Routers communication | 2023:​b::/127 |                         |
+  | Frankfurt subnet          | 2023:​c::/48 | 2023:​a:​c::x/128 |
+  | Roubaix subnet            | 2023:​d::/48 | 2023:​a:​d::x/128 |
+  | Strasbourg subnet         | 2023:​e::/48 | 2023:​a:​e::x/128 |
+  | Paris subnet              | 2023:​f::/48 | 2023:​a:​f::x/128 |
 
-  where *C* indicates the city (and not the 12 hexadecimal value!) and *x* designates the interface ID.
+  where *C* refers to the city (and not the 12 hexadecimal value!) and *x* refers to the interface ID.
 
 ## References
 

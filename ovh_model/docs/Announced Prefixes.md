@@ -1,8 +1,8 @@
 # Announced Prefixes
 
-List of prefixes announced by the peers (25 per peer) of ASes 1299, 15169, 174 and 3356.
-
-
+List of prefixes announced by the peers AS 1299, 15169, 174 and 3356 (25 per peer) and by some important entities 
+(e.g. root servers). We will use a few of them to observe how the prefix announcement works. Moreover, we do not show 
+all information about *each* prefix, as we observed that they have the same BGP attributes values.
 
 ## Important Prefixes
 
@@ -93,36 +93,16 @@ List of prefixes announced by the peers (25 per peer) of ASes 1299, 15169, 174 a
 
 ## Telia (AS 1299)
 
-Rq: Reach those addresses through London (so is it useful to keep those addresses?)
-
-- 96.17.4.0/22
-- 96.16.192.0/21
-- 95.101.133.0/24
-- 92.241.220.0/22
-- 92.241.216.0/22
-- 92.241.192.0/20
-- 91.149.32.0/20
-- 84.254.68.0/22
-- 80.91.248.0/21
-- 80.91.240.0/20
-- 80.239.224.0/19
-- 80.239.192.0/19
-- 80.239.160.0/19
-- 80.239.128.0/19
-- 72.247.64.0/21
-- 72.246.240.0/22
-- 62.115.0.0/16
-- 5.154.160.0/21
-- 46.230.224.0/20
-- 46.230.216.0/21
-- 46.230.208.0/21
-- 46.230.208.0/20
-- 46.230.192.0/20
-- 46.230.176.0/20
+Prefixes announced by Telia are reached via another part of the OVH network that we have not modelled (London). These 
+prefixes are: 96.17.4.0/22, 96.16.192.0/21, 95.101.133.0/24, 92.241.220.0/22, 92.241.216.0/22, 92.241.192.0/20, 91.149.32.0/20,
+84.254.68.0/22, 80.91.248.0/21, 80.91.240.0/20, 80.239.224.0/19, 80.239.192.0/19, 80.239.160.0/19, 80.239.128.0/19, 
+72.247.64.0/21, 72.246.240.0/22, 62.115.0.0/16, 5.154.160.0/21, 46.230.224.0/20, 46.230.216.0/21, 46.230.208.0/21, 
+46.230.208.0/20, 46.230.192.0/20, 46.230.176.0/20.
 
 ## Google (AS 15169)
 
-All these IP addresses through Paris (**par-gsw-pb1-nc5.fr.eu**).
+All the IP prefixes announced are reached via **par-gsw-pb1-nc5.fr.eu** (`ovh_r10` or `ovh_r11`) and have the same
+attributes values:
 
 - 8.8.8.0/24:
 ```
@@ -180,83 +160,20 @@ All these IP addresses through Paris (**par-gsw-pb1-nc5.fr.eu**).
 	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
                    unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
 ```
-- 8.34.216.0/21:
-```
-8.34.216.0/21      unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 15169
-	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
-	BGP.med: 0
-	BGP.local_pref: 350
-	BGP.community: (16276,34917)
-	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
-	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
-                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
-```
-- 8.34.208.0/21:
-```
-8.34.208.0/21      unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 15169
-	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
-	BGP.med: 0
-	BGP.local_pref: 350
-	BGP.community: (16276,34917)
-	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
-	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
-                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
-```
-- 74.125.72.0/22:
-```
-74.125.72.0/22     unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 15169
-	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
-	BGP.med: 0
-	BGP.local_pref: 350
-	BGP.community: (16276,34917)
-	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
-	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
-                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
-```
-- 74.125.71.0/24
-- 74.125.70.0/24
-- 74.125.69.0/24
-- 74.125.68.0/24
-- 74.125.6.0/24
-- 74.125.44.0/22
-- 74.125.39.0/24
-- 74.125.38.0/24
-- 74.125.31.0/24
-- 74.125.30.0/24
-- 74.125.29.0/24:
-```
-74.125.29.0/24     unreachable [rbx_g1_nc5 2020-08-05 from 94.23.122.41] * (100/-) [AS15169i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 15169
-	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
-	BGP.med: 0
-	BGP.local_pref: 350
-	BGP.community: (16276,34917)
-	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
-	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
-                   unreachable [rbx_g2_nc5 2020-08-05 from 94.23.12
-```
-- 74.125.28.0/24
-- 74.125.26.0/24
-- 74.125.250.0/24
-- 74.125.25.0/24
-- 74.125.24.0/24
-- 74.125.238.0/24
-- 74.125.236.0/24
+
+The other prefixes are 8.34.216.0/21, 8.34.208.0/21, 74.125.72.0/22, 74.125.71.0/24, 74.125.70.0/24, 74.125.69.0/24, 
+74.125.68.0/24, 74.125.6.0/24, 74.125.44.0/22, 74.125.39.0/24, 74.125.38.0/24, 74.125.31.0/24, 74.125.30.0/24, 
+74.125.29.0/24, 74.125.28.0/24, 74.125.26.0/24, 74.125.250.0/24, 74.125.25.0/24, 74.125.24.0/24, 74.125.238.0/24, 
+74.125.236.0/24.
 
 ## Cogent (AS 174)
 
-- 98.159.96.0/22:
+Here are a list of some prefixes announced by Cogent: 98.159.96.0/22, 92.240.5.0/24, 91.229.58.0/24, 91.229.180.0/24, 
+91.220.175.0/24, 91.208.170.0/24, 91.208.105.0/24, 91.198.26.0/24, 91.189.104.0/21, 91.132.12.0/22, 91.108.200.0/22, 
+88.214.52.0/22, 85.255.84.0/24, 85.208.124.0/22, 84.54.58.0/24, 84.54.56.0/23, 83.171.254.0/23, 82.138.83.0/24, 
+82.138.64.0/18, 82.129.9.0/24, 82.129.66.0/23, 82.129.65.0/24, 82.129.6.0/23, 82.129.44.0/24, 82.129.4.0/24.
+
+They have these attributes values:
 ```
 98.159.96.0/22     unreachable [rbx_g1_nc5 2020-09-08 from 94.23.122.41] * (100/-) [AS174i]
 	Type: BGP unicast univ
@@ -270,47 +187,15 @@ All these IP addresses through Paris (**par-gsw-pb1-nc5.fr.eu**).
 	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
                    unreachable [rbx_g2_nc5 2020-09-15 from 94.23.12
 ```
-- 92.240.5.0/24
-- 91.229.58.0/24:
-```
-91.229.58.0/24     unreachable [rbx_g1_nc5 2020-09-24 from 94.23.122.41] * (100/-) [AS174i]
-	Type: BGP unicast univ
-	BGP.origin: IGP
-	BGP.as_path: 174
-	BGP.next_hop: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
-	BGP.med: 0
-	BGP.local_pref: 80
-	BGP.community: (174,21101) (174,22007) (16276,10817)
-	BGP.originator_id: 54.36.50.197 (par-gsw-pb1-nc5.fr.eu)
-	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
-                   unreachable [rbx_g2_nc5 2020-09-24 from 94.23.12
-```
-- 91.229.180.0/24
-- 91.220.175.0/24
-- 91.208.170.0/24
-- 91.208.105.0/24
-- 91.198.26.0/24
-- 91.189.104.0/21
-- 91.132.12.0/22
-- 91.108.200.0/22
-- 88.214.52.0/22
-- 85.255.84.0/24
-- 85.208.124.0/22
-- 84.54.58.0/24
-- 84.54.56.0/23
-- 83.171.254.0/23
-- 82.138.83.0/24
-- 82.138.64.0/18
-- 82.129.9.0/24
-- 82.129.66.0/23
-- 82.129.65.0/24
-- 82.129.6.0/23
-- 82.129.44.0/24
-- 82.129.4.0/24
 
 ## Level3 (AS 3356)
 
-- 99.193.251.0/24:
+Here are a list of some prefixes announced by Level3: 99.193.251.0/24, 98.159.39.0/24, 98.159.38.0/24, 98.159.33.0/24, 
+98.159.32.0/24, 98.159.239.0/24, 98.159.234.0/24, 98.159.226.0/24, 92.119.149.0/24, 92.119.12.0/22, 91.207.153.0/24, 
+91.207.152.0/24, 91.149.254.0/24, 91.149.252.0/23, 91.149.232.0/23, 91.149.230.0/24, 91.149.228.0/23, 91.149.222.0/23, 
+91.149.218.0/23, 89.167.241.0/24, 89.167.240.0/24, 89.167.232.0/24, 89.167.224.0/24, 89.167.219.0/24, 89.167.175.0/24.
+
+They have these attributes values:
 ```
 99.193.251.0/24    unreachable [rbx_g1_nc5 2020-10-29 from 94.23.122.41] * (100/-) [AS3356i]
 	Type: BGP unicast univ
@@ -324,27 +209,3 @@ All these IP addresses through Paris (**par-gsw-pb1-nc5.fr.eu**).
 	BGP.cluster_list: 94.23.122.41 54.36.50.100 54.36.50.195
                    unreachable [rbx_g2_nc5 2020-10-29 from 94.23.12
 ```
-- 98.159.39.0/24
-- 98.159.38.0/24
-- 98.159.33.0/24
-- 98.159.32.0/24
-- 98.159.239.0/24
-- 98.159.234.0/24
-- 98.159.226.0/24
-- 92.119.149.0/24
-- 92.119.12.0/22
-- 91.207.153.0/24
-- 91.207.152.0/24
-- 91.149.254.0/24
-- 91.149.252.0/23
-- 91.149.232.0/23
-- 91.149.230.0/24
-- 91.149.228.0/23
-- 91.149.222.0/23
-- 91.149.218.0/23
-- 89.167.241.0/24
-- 89.167.240.0/24
-- 89.167.232.0/24
-- 89.167.224.0/24
-- 89.167.219.0/24
-- 89.167.175.0/24

@@ -5,7 +5,7 @@ In our network, we have:
 - one DNS resolver attached to `ovh_r7` (`resolver1`)
 - another DNS resolver attached to `ovh_r4` (`resolver2`)
 
-![OVH Initial Model](../img/model_preview.jpg)
+![OVH Initial Model](../img/technical_overview.png)
 
 `resolver1` and `resolver2` shares the same IPv4 and IPv6 addresses:
 ```
@@ -49,7 +49,7 @@ resolver2-eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 ```
 
-On the link where they are attached to their respective resolvers, `ovh_r4` and `ovh_r7` also share the same IPv4 and IPv6 addresses:
+Their respective resolvers, `ovh_r4` and `ovh_r7` also share the same IPv4 and IPv6 addresses:
 
 ```
 ovh_r4-eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
@@ -71,7 +71,6 @@ ovh_r7-eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         RX errors 0  dropped 0  overruns 0  frame 0
         TX packets 12  bytes 1232 (1.2 KB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
-
 ```
 
 The DNS zone (`/tmp/named_resolver1.ovh.com.zone.cfg`) is configured as follows:
@@ -336,7 +335,8 @@ resolver2.ovh.com.	60	IN	AAAA	2023:b::37
 
 (Sometimes, no answer is given, with a message of size 64).
 
-With IPv6 (**not working**):
+With IPv6, however, the configuration file of the in-addr.arpa.zone is not created for some unknown reason. Then the 
+`dig` command cannot give an answer, as shown here:
 
 ```
 mininet> ovh_r12 dig @2023:b::37 ovh.com ANY
@@ -375,9 +375,8 @@ xterm ovh_r12> nc -u 2023:b::37 53
 Hello DNS server! (UDP, IPv6)
 ```
 
-Results: 4 packets received by filter by `resolver1`, nothing for `resolver2` (**not working!**):
-
-![resolver1 pcap](../img/tcpdump_resolver1_udp.png)
+Results: 4 packets received by `resolver1`, nothing for `resolver2` (see `pcap/tcpdump_resolver1_udp.pcap` and 
+`pcap/tcpdump_resolver2_udp.pcap`).
 
 ### TCP
 
@@ -487,7 +486,7 @@ resolver2.ovh.com.	60	IN	AAAA	2023:b::37
 ;; MSG SIZE  rcvd: 239
 ```
 
-With IPv6 (**not working**):
+With IPv6, it does not work for the same reason as for UDP:
 
 ```
 mininet> ovh_r6 dig @2023:b::37 ovh.com ANY +tcp
@@ -526,8 +525,8 @@ xterm ovh_r12> nc 2023:b::37 53
 Hello DNS server! (TCP, IPv6)
 ```
 
-Results (see `.pcap` files):
+Results (see `pcap/tcpdump_resolver1_tcp.pcap` and `pcap/tcpdump_resolver2_tcp.pcap`):
 - 259 packets captured and 556 packets received by filter for `resolver1`;
 - 203 packets captured and 426 packets received by filter for `resolver2`
 
-but only TCP establishment connection?
+but only TCP establishment connection.

@@ -14,6 +14,13 @@ We could represent it by the following model:
 
 With some information (with IPv4 addressing plan):
 
-![OVH Initial Model](img/advanced_model_preview.png)
+![OVH Initial Model](img/technical_overview.png)
 
 Keep in mind this scheme, because it is the basis of our network configuration.
+
+## Structure of this directory
+
+There are some folders included in this current directory:
+
+- `pcap`: You will find some `tcpdump` files used to test anycast DNS and to observe a reply from the server (even though the DNS requests which are sent are malformed, by sending them via `netcat`);
+- `docs` contains some Markdown files about some aspects of the configuration of the network
