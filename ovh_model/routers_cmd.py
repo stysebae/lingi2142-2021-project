@@ -79,11 +79,42 @@ def advertise_google():
 
     send_command("router bgp 5")
     send_command("network 8.8.8.0 mask 255.255.255.0")
+    send_command("network 192.33.4.0 mask 255.255.255.0")
+    send_command("network 192.112.36.0 mask 255.255.255.0")
 
     send_command("end")
     send_command("exit")
     child.expect("mininet>")
 
+def advertise_cogent():
+    child.sendline("cogent_r1 telnet localhost 2605")
+    send_command("zebra")
+    child.expect("cogent_r1>")
+    send_command("enable")
+    child.expect("cogent_r1#")
+    send_command("configure terminal")
+
+    send_command("router bgp 3")
+    send_command("network 98.159.96.0 mask 255.255.252.0")
+
+    send_command("end")
+    send_command("exit")
+    child.expect("mininet>")
+
+def advertise_level3():
+    child.sendline("level3_r1 telnet localhost 2605")
+    send_command("zebra")
+    child.expect("level3_r1>")
+    send_command("enable")
+    child.expect("level3_r1#")
+    send_command("configure terminal")
+
+    send_command("router bgp 4")
+    send_command("network 99.193.251.0 mask 255.255.255.0")
+
+    send_command("end")
+    send_command("exit")
+    child.expect("mininet>")
 
 if __name__ == "__main__":
     child = pexpect.spawn('./main.py', encoding='utf-8')
@@ -106,6 +137,8 @@ if __name__ == "__main__":
     set_password_routers(["ovh_r6", "level3_r1"], ["12.11.0.29", "12.11.0.28"], [1, 4], "fff") # ovh_r6 <-> level3_r1
 
     advertise_google()
+    advertise_cogent()
+    advertise_level3()
 
     child.interact()
 

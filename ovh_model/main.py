@@ -21,12 +21,10 @@ from ipmininet.host.config import Named, ARecord, PTRRecord, AAAARecord
 from ipaddress import ip_address
 
 from ip_addresses import IPv4Address, IPv6Address
-from announced_prefixes import GOOGLE_IPV4_ANNOUNCED_PREFIXES
 
 # CONSTANT VALUES
 
 # Links and Loopback addresses
-from ovh_model.announced_prefixes import COGENT_IPV4_ANNOUNCED_PREFIXES, LEVEL3_IPV4_ANNOUNCED_PREFIXES
 
 IPV4_LO_PREFIX = 32
 IPV4_LINK_PREFIX = IPV4_LO_PREFIX - 1
@@ -314,11 +312,11 @@ class OVHTopology(IPTopo):
             router.addDaemon(BGP, routerid=router_id + str(i), family=AF_INET6(redistribute=("ospf6", "connected"), ))
         # Other AS advertise specific prefixes
         for router in google_routers:
-            router.addDaemon(BGP, family=GOOGLE_IPV4_ANNOUNCED_PREFIXES)
+            router.addDaemon(BGP)
         for router in cogent_routers:
-            router.addDaemon(BGP, family=COGENT_IPV4_ANNOUNCED_PREFIXES)
+            router.addDaemon(BGP)
         for router in level3_routers:
-            router.addDaemon(BGP, family=LEVEL3_IPV4_ANNOUNCED_PREFIXES)
+            router.addDaemon(BGP)
 
     def add_router_reflector(self, router_reflector, clients_list):
         """
