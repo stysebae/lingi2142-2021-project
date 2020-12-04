@@ -48,7 +48,7 @@ class OVHTopology(IPTopo):
         Build the topology of our OVH network and set up it by adding routers, links, protocols, setting up routers
         reflectors, etc.
         """
-        #TODO: check IPv6 addresses
+        # TODO: check IPv6 addresses
         # Adding routers
         fra1_lim1_g1 = self.addRouter("fra1_lim1_g1",
                                       config=RouterConfig,
@@ -138,21 +138,6 @@ class OVHTopology(IPTopo):
         par_routers = [par_th2, par_gsw]  # In Paris
         ovh_routers = fra_routers + rbx_routers + sbg_routers + par_routers
 
-        # Subnets
-        ipv4_subnet_fra = IPv4Address(12, 16, 218, 0, IPV4_SUBNET_PREFIX).__str__()
-        ipv6_subnet_fra = IPv6Address("2023", "c", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
-        ipv4_subnet_rbx = IPv4Address(12, 16, 218, 2, IPV4_SUBNET_PREFIX).__str__()
-        ipv6_subnet_rbx = IPv6Address("2023", "d", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
-        ipv4_subnet_sbg = IPv4Address(12, 16, 218, 4, IPV4_SUBNET_PREFIX).__str__()
-        ipv6_subnet_sbg = IPv6Address("2023", "e", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
-        ipv4_subnet_par = IPv4Address(12, 16, 218, 6, IPV4_SUBNET_PREFIX).__str__()
-        ipv6_subnet_fra = IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
-
-        self.addSubnet(nodes=[fra_routers], subnets=[ipv6_subnet_fra, ipv4_subnet_fra])
-        self.addSubnet(nodes=[rbx_routers], subnets=[ipv6_subnet_rbx, ipv4_subnet_rbx])
-        self.addSubnet(nodes=[sbg_routers], subnets=[ipv6_subnet_sbg, ipv4_subnet_sbg])
-        self.addSubnet(nodes=[par_routers], subnets=[ipv6_subnet_fra, ipv4_subnet_par])
-
         # Hosts
         telia_host = self.addHost("telia_host")
         self.addLink(telia_host, telia)
@@ -163,8 +148,45 @@ class OVHTopology(IPTopo):
         level3_host = self.addHost("level3_host")
         self.addLink(level3_host, level3)
         sbg_webserver = self.addHost("sbg_webserver")  # for anycast
+        self.addLink(sbg_webserver, sbg_g2)
+        # TODO: change to Router (in order to set a loopback address)
         fra_dns_resolver = self.addHost("fra_dns_resolver")
+        self.addLink(fra_dns_resolver, fra_fr5_sbb2)
         rbx_dns_resolver = self.addHost("rbx_dns_resolver")
+        self.addLink(rbx_dns_resolver, rbx_g1)
+
+        # Subnets
+        ipv4_subnet_fra = IPv4Address(12, 16, 218, 0, IPV4_SUBNET_PREFIX).__str__()
+        ipv6_subnet_fra = IPv6Address("2023", "c", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
+        ipv4_subnet_rbx = IPv4Address(12, 16, 218, 2, IPV4_SUBNET_PREFIX).__str__()
+        ipv6_subnet_rbx = IPv6Address("2023", "d", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
+        ipv4_subnet_sbg = IPv4Address(12, 16, 218, 4, IPV4_SUBNET_PREFIX).__str__()
+        ipv6_subnet_sbg = IPv6Address("2023", "e", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
+        ipv4_subnet_par = IPv4Address(12, 16, 218, 6, IPV4_SUBNET_PREFIX).__str__()
+        ipv6_subnet_fra = IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
+        self.addSubnet(nodes=[fra_routers], subnets=[ipv6_subnet_fra, ipv4_subnet_fra])
+        self.addSubnet(nodes=[fra_routers], subnets=[ipv6_subnet_fra, ipv4_subnet_fra])
+        self.addSubnet(nodes=[rbx_routers], subnets=[ipv6_subnet_rbx, ipv4_subnet_rbx])
+        self.addSubnet(nodes=[sbg_routers], subnets=[ipv6_subnet_sbg, ipv4_subnet_sbg])
+        self.addSubnet(nodes=[par_routers], subnets=[ipv6_subnet_fra, ipv4_subnet_par])
+        # TODO: change the IP addresses
+        """
+        self.addSubnet(nodes=[google, google_host], subnets=[IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", 
+                                                                         IPV6_SUBNET_PREFIX).__str__(), 
+                                                             IPv4Address(8, 8, 4, 0, 24).__str__()])
+        self.addSubnet(nodes=[telia, telia_host], subnets=[IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", 
+                                                                       IPV6_SUBNET_PREFIX).__str__(), 
+                                                           IPv4Address(8, 8, 4, 0, 24).__str__()])
+        self.addSubnet(nodes=[cogent, cogent_host], subnets=[IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", 
+                                                                         IPV6_SUBNET_PREFIX).__str__(), 
+                                                             IPv4Address(8, 8, 4, 0, 24).__str__()])
+        self.addSubnet(nodes=[level3, level3_host], subnets=[IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", 
+                                                                         IPV6_SUBNET_PREFIX).__str__(), 
+                                                             IPv4Address(8, 8, 4, 0, 24).__str__()])
+        """
+        # TODO: check if it is okay
+        self.addSubnet(nodes=[fra_fr5_sbb2, fra_dns_resolver], subnets=[ipv6_subnet_fra, ipv4_subnet_fra])
+        self.addSubnet(nodes=[rbx_g1, rbx_dns_resolver], subnets=[ipv6_subnet_rbx, ipv4_subnet_rbx])
 
         # Adding physical links
         self.add_physical_link(fra1_lim1_g1, fra1_lim1_g2,
@@ -297,6 +319,7 @@ class OVHTopology(IPTopo):
         ebgp_session(self, par_th2, google)
 
         # DNS anycast
+        # TODO: to check
         fra_dns_resolver.addDaemon(Named)
         rbx_dns_resolver.addDaemon(Named)
         self.addDNSZone(name=DOMAIN, dns_master=fra_dns_resolver, dns_slaves=[rbx_dns_resolver],
@@ -309,7 +332,7 @@ class OVHTopology(IPTopo):
                         ns_domain_name=DOMAIN, records=[ptr_record_ipv6])
         super().build(*args, **kwargs)
 
-    def add_physical_link(self, router1, router2, ip_addr_routers, igp_cost_value=1, hello_timer=6, dead_timer=8):
+    def add_physical_link(self, router1, router2, ip_addr_routers, igp_cost_value=1, hello_timer=5, dead_timer=20):
         """
         Add a physical link with IPv4 and IPv6 addresses on interface parameters between two given routers.
 
