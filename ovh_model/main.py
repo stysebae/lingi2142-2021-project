@@ -47,65 +47,65 @@ class OVHTopology(IPTopo):
         # Adding routers
         ovh_r1 = self.addRouter("ovh_r1", config=RouterConfig, lo_addresses=[
             IPv6Address("2023", "a", "c", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
-            IPv4Address(12, 10, 12, 1, IPV4_LO_PREFIX).__str__()])
+            IPv4Address(12, 16, 216, 1, IPV4_LO_PREFIX).__str__()])
         ovh_r2 = self.addRouter("ovh_r2", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "c", "0", "0", "0", "0", "2", IPV6_LO_PREFIX).__str__(),
-                                    IPv4Address(12, 10, 12, 2, IPV4_LO_PREFIX).__str__()])
+                                    IPv4Address(12, 16, 216, 2, IPV4_LO_PREFIX).__str__()])
         ovh_r3 = self.addRouter("ovh_r3", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "c", "0", "0", "0", "0", "3", IPV6_LO_PREFIX).__str__(),
-                                    IPv4Address(12, 10, 12, 3, IPV4_LO_PREFIX).__str__()])
+                                    IPv4Address(12, 16, 216, 3, IPV4_LO_PREFIX).__str__()])
         ovh_r4 = self.addRouter("ovh_r4", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "c", "0", "0", "0", "0", "4", IPV6_LO_PREFIX).__str__(),
-                                    IPv4Address(12, 10, 12, 4, IPV4_LO_PREFIX).__str__()])
+                                    IPv4Address(12, 16, 216, 4, IPV4_LO_PREFIX).__str__()])
         ovh_r5 = self.addRouter("ovh_r5", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "c", "0", "0", "0", "0", "5", IPV6_LO_PREFIX).__str__(),
-                                    IPv4Address(12, 10, 12, 5, IPV4_LO_PREFIX).__str__()])
+                                    IPv4Address(12, 16, 216, 5, IPV4_LO_PREFIX).__str__()])
         ovh_r6 = self.addRouter("ovh_r6", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "c", "0", "0", "0", "0", "6", IPV6_LO_PREFIX).__str__(),
-                                    IPv4Address(12, 10, 12, 6, IPV4_LO_PREFIX).__str__()])
+                                    IPv4Address(12, 16, 216, 6, IPV4_LO_PREFIX).__str__()])
         ovh_r7 = self.addRouter("ovh_r7", lo_addresses=[
             IPv6Address("2023", "a", "d", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
-            IPv4Address(12, 10, 13, 1, IPV4_LO_PREFIX).__str__()])
+            IPv4Address(12, 16, 216, 7, IPV4_LO_PREFIX).__str__()])
         ovh_r8 = self.addRouter("ovh_r8", config=RouterConfig,
                                 lo_addresses=[
                                     IPv6Address("2023", "a", "d", "0", "0", "0", "0", "2", IPV6_LO_PREFIX).__str__(),
-                                    IPv4Address(12, 10, 13, 2, IPV4_LO_PREFIX).__str__()])
+                                    IPv4Address(12, 16, 216, 8, IPV4_LO_PREFIX).__str__()])
         ovh_r9 = self.addRouter("ovh_r9", lo_addresses=[
             IPv6Address("2023", "a", "e", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
-            IPv4Address(12, 10, 14, 1, IPV4_LO_PREFIX).__str__()])
+            IPv4Address(12, 16, 216, 9, IPV4_LO_PREFIX).__str__()])
         ovh_r10 = self.addRouter("ovh_r10", config=RouterConfig,
                                  lo_addresses=[
                                      IPv6Address("2023", "a", "f", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
-                                     IPv4Address(12, 10, 15, 1, IPV4_LO_PREFIX).__str__()])
+                                     IPv4Address(12, 16, 216, 10, IPV4_LO_PREFIX).__str__()])
         ovh_r11 = self.addRouter("ovh_r11", config=RouterConfig,
                                  lo_addresses=[
                                      IPv6Address("2023", "a", "f", "0", "0", "0", "0", "2", IPV6_LO_PREFIX).__str__(),
-                                     IPv4Address(12, 10, 15, 2, IPV4_LO_PREFIX).__str__()])
+                                     IPv4Address(12, 16, 216, 11, IPV4_LO_PREFIX).__str__()])
         ovh_r12 = self.addRouter("ovh_r12", config=RouterConfig,
                                  lo_addresses=[
                                      IPv6Address("2023", "a", "e", "0", "0", "0", "0", "2", IPV6_LO_PREFIX).__str__(),
-                                     IPv4Address(12, 10, 14, 2, IPV4_LO_PREFIX).__str__()])
+                                     IPv4Address(12, 16, 216, 12, IPV4_LO_PREFIX).__str__()])
         telia_r1 = self.addRouter("telia_r1", config=RouterConfig,
                                   lo_addresses=[
                                       IPv6Address("2023", "a", "5", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
-                                      IPv4Address(12, 10, 20, 1, IPV4_LO_PREFIX).__str__()])
+                                      IPv4Address(123, 3, 2, 1, IPV4_LO_PREFIX).__str__()])
         google_r1 = self.addRouter("google_r1", config=RouterConfig,
                                    lo_addresses=[
                                        IPv6Address("2023", "a", "6", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
-                                       IPv4Address(12, 10, 21, 1, IPV4_LO_PREFIX).__str__()])
+                                       IPv4Address(124, 3, 2, 1, IPV4_LO_PREFIX).__str__()])
         cogent_r1 = self.addRouter("cogent_r1", config=RouterConfig,
                                    lo_addresses=[
                                        IPv6Address("2023", "a", "7", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
-                                       IPv4Address(12, 10, 22, 1, IPV4_LO_PREFIX).__str__()])
+                                       IPv4Address(125, 3, 2, 1, IPV4_LO_PREFIX).__str__()])
         level3_r1 = self.addRouter("level3_r1", config=RouterConfig,
                                    lo_addresses=[
                                        IPv6Address("2023", "a", "8", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
-                                       IPv4Address(12, 10, 23, 1, IPV4_LO_PREFIX).__str__()])
+                                       IPv4Address(126, 3, 2, 1, IPV4_LO_PREFIX).__str__()])
         all_routers = [ovh_r1, ovh_r2, ovh_r3, ovh_r4, ovh_r5, ovh_r6, ovh_r7, ovh_r8, ovh_r9, ovh_r10, ovh_r11,
                        ovh_r12, telia_r1, google_r1, cogent_r1, level3_r1]
         # Adding protocols to routers
@@ -132,13 +132,13 @@ class OVHTopology(IPTopo):
         ovh_dns_resolver1 = self.addHost("resolver1")
         ovh_dns_resolver2 = self.addHost("resolver2")
         self.add_physical_link(ovh_r7, ovh_dns_resolver1, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36",
-                                                                       IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 54,
+                                                                       IPV6_LINK_PREFIX), IPv4Address(12, 16, 217, 54,
                                                                                                       IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r4, ovh_dns_resolver2, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36",
-                                                                       IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 54,
+                                                                       IPV6_LINK_PREFIX), IPv4Address(12, 16, 217, 54,
                                                                                                       IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r11, ovh_webserver1, (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38",
-                                                                     IPV6_LINK_PREFIX), IPv4Address(12, 11, 0, 56,
+                                                                     IPV6_LINK_PREFIX), IPv4Address(12, 16, 217, 56,
                                                                                                     IPV4_LINK_PREFIX)))
         ovh_dns_resolver1.addDaemon(Named)
         ovh_dns_resolver2.addDaemon(Named)
@@ -153,85 +153,85 @@ class OVHTopology(IPTopo):
         # Adding links
         self.add_physical_link(ovh_r1, ovh_r2, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "0", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 0, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 0, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r1, ovh_r3, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 2, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 2, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r2, ovh_r4, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "4", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 4, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 4, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r3, ovh_r4, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "6", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 6, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 6, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r3, ovh_r6, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "8", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 8, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 8, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r3, ovh_r5, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "a", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 10, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 10, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r3, ovh_r9, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "b", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 12, IPV4_LINK_PREFIX)), igp_cost_value=2)
+            IPv4Address(12, 16, 217, 12, IPV4_LINK_PREFIX)), igp_cost_value=2)
         self.add_physical_link(ovh_r3, ovh_r7, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "c", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 14, IPV4_LINK_PREFIX)), igp_cost_value=5)
+            IPv4Address(12, 16, 217, 14, IPV4_LINK_PREFIX)), igp_cost_value=5)
         self.add_physical_link(ovh_r4, ovh_r5, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "10", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 16, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 16, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r4, ovh_r6, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "12", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 18, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 18, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r4, ovh_r8, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "14", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 20, IPV4_LINK_PREFIX)), igp_cost_value=5)
+            IPv4Address(12, 16, 217, 20, IPV4_LINK_PREFIX)), igp_cost_value=5)
         self.add_physical_link(ovh_r4, ovh_r12, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "16", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 22, IPV4_LINK_PREFIX)), igp_cost_value=2)
+            IPv4Address(12, 16, 217, 22, IPV4_LINK_PREFIX)), igp_cost_value=2)
         self.add_physical_link(ovh_r5, telia_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "18", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 24, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 24, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r6, telia_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1a", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 26, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 26, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r6, level3_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1b", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 28, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 28, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r7, ovh_r8, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1c", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 30, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 30, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r7, ovh_r10, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "20", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 32, IPV4_LINK_PREFIX)), igp_cost_value=3)
+            IPv4Address(12, 16, 217, 32, IPV4_LINK_PREFIX)), igp_cost_value=3)
         self.add_physical_link(ovh_r8, ovh_r11, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "22", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 34, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 34, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r9, ovh_r12, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "24", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 36, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 36, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r9, ovh_r10, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "26", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 38, IPV4_LINK_PREFIX)), igp_cost_value=5)
+            IPv4Address(12, 16, 217, 38, IPV4_LINK_PREFIX)), igp_cost_value=5)
         self.add_physical_link(ovh_r10, ovh_r11, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "28", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 40, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 40, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r10, google_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2a", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 42, IPV4_LINK_PREFIX)), igp_cost_value=2)
+            IPv4Address(12, 16, 217, 42, IPV4_LINK_PREFIX)), igp_cost_value=2)
         self.add_physical_link(ovh_r10, cogent_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2b", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 44, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 44, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r11, ovh_r12, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2c", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 46, IPV4_LINK_PREFIX)), igp_cost_value=5)
+            IPv4Address(12, 16, 217, 46, IPV4_LINK_PREFIX)), igp_cost_value=5)
         self.add_physical_link(ovh_r11, level3_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "30", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 48, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 48, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r11, cogent_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "32", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 50, IPV4_LINK_PREFIX)))
+            IPv4Address(12, 16, 217, 50, IPV4_LINK_PREFIX)))
         self.add_physical_link(ovh_r11, google_r1, (
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "34", IPV6_LINK_PREFIX),
-            IPv4Address(12, 11, 0, 52, IPV4_LINK_PREFIX)), igp_cost_value=2)
+            IPv4Address(12, 16, 217, 52, IPV4_LINK_PREFIX)), igp_cost_value=2)
         # Set BGP parameters (according to announced prefixes)
         al = AccessList(name="all", entries=("any",))
         # With Google (AS 15169)

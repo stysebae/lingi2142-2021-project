@@ -14,3 +14,6 @@ IP addresses or router configuration files, ...
 The latest user documentation is available on
 https://ipmininet.readthedocs.io/
 
+# Our modifications
+
+Our project is located under the *ovh_model* directory.

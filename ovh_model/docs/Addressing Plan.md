@@ -3,20 +3,20 @@
 ## IPv4
 
 - **Each city has its own subnet**.
-- We use the public IP addresses range 12.0.0.0/8, as following:
+- We use the public IP addresses range 12.16.216.0/22, as following:
 
   | Location           | IP Addresses range | Loopback Addresses |
   |--------------------|--------------------|--------------------|
-  | *Loopback Addresses* | 12.10.c.x/32       |                    |
-    | Routers communication | 12.11.0.x/31       |                    |
-  | Frankfurt subnet         | 12.12.0.0/24       | 12.10.12.x/32       |
-  | Roubaix subnet            | 12.13.0.0/24       | 12.10.13.x/32       |
-  | Strasbourg subnet         | 12.14.0.0/24       | 12.10.14.x/32       |
-  | Paris subnet              | 12.15.0.0/24       | 12.10.15.x/32       |
+  | *Loopback Addresses* | 12.16.216.x/32       |                    |
+    | Routers communication | 12.16.217.x/31       |                    |
+  | Frankfurt subnet         | 12.16.218.0/27       | 12.16.216.x/32       |
+  | Roubaix subnet            | 12.16.218.2/27       | 12.16.216.x/32       |
+  | Strasbourg subnet         | 12.16.218.4/27       | 12.16.216.x/32       |
+  | Paris subnet              | 12.16.218.6/27       | 12.16.216.x/32       |
 
   A few comments about this choice:
-  - the format of the loopback addresses is 12.10.c.x/32 where *c* indicates the city ID and *x* the interface ID. Because we do not need more than one loopback address, its mask is /32.
-  - We use **/24 mask** for each city. Inside this prefix, **a link between two interfaces uses a /31 mask**.
+  - the format of the loopback addresses is 12.16.216.x/32 where *x* is the interface ID. Because we do not need more than one loopback address, its mask is /32.
+  - We use **/27 mask** for each city. Inside this prefix, **a link between two interfaces uses a /31 mask**.
 
 ## IPv6
 
