@@ -24,8 +24,10 @@ from ip_addresses import IPv4Address, IPv6Address
 
 IPV4_LO_PREFIX = 32
 IPV4_LINK_PREFIX = IPV4_LO_PREFIX - 1
+IPV4_SUBNET_PREFIX = 27
 IPV6_LO_PREFIX = 128
 IPV6_LINK_PREFIX = IPV6_LO_PREFIX - 1
+IPV6_SUBNET_PREFIX = 48
 
 DOMAIN = "ovh.com"
 
@@ -46,6 +48,7 @@ class OVHTopology(IPTopo):
         Build the topology of our OVH network and set up it by adding routers, links, protocols, setting up routers
         reflectors, etc.
         """
+        #TODO: check IPv6 addresses
         # Adding routers
         fra1_lim1_g1 = self.addRouter("fra1_lim1_g1",
                                       config=RouterConfig,
@@ -128,10 +131,27 @@ class OVHTopology(IPTopo):
                                                           IPV6_LO_PREFIX).__str__(),
                                               IPv4Address(126, 3, 2, 1, IPV4_LO_PREFIX).__str__()])
         all_routers = [fra1_lim1_g1, fra1_lim1_g2, fra_fr5_sbb1, fra_fr5_sbb2, fra_1, fra_5, rbx_g1, rbx_g2, sbg_g1,
-                       par_th2, par_gsw, sbg_g2, telia, google, cogent, level3]
+                       sbg_g2, par_th2, par_gsw, telia, google, cogent, level3]
+        fra_routers = [fra1_lim1_g1, fra1_lim1_g2, fra_fr5_sbb1, fra_fr5_sbb2, fra_1, fra_5]  # In Frankfurt
+        rbx_routers = [rbx_g1, rbx_g2]  # In Roubaix
+        sbg_routers = [sbg_g1, sbg_g2]  # In Strasbourg
+        par_routers = [par_th2, par_gsw]  # In Paris
+        ovh_routers = fra_routers + rbx_routers + sbg_routers + par_routers
 
         # Subnets
-        # TODO
+        ipv4_subnet_fra = IPv4Address(12, 16, 218, 0, IPV4_SUBNET_PREFIX).__str__()
+        ipv6_subnet_fra = IPv6Address("2023", "c", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
+        ipv4_subnet_rbx = IPv4Address(12, 16, 218, 2, IPV4_SUBNET_PREFIX).__str__()
+        ipv6_subnet_rbx = IPv6Address("2023", "d", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
+        ipv4_subnet_sbg = IPv4Address(12, 16, 218, 4, IPV4_SUBNET_PREFIX).__str__()
+        ipv6_subnet_sbg = IPv6Address("2023", "e", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
+        ipv4_subnet_par = IPv4Address(12, 16, 218, 6, IPV4_SUBNET_PREFIX).__str__()
+        ipv6_subnet_fra = IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
+
+        self.addSubnet(nodes=[fra_routers], subnets=[ipv6_subnet_fra, ipv4_subnet_fra])
+        self.addSubnet(nodes=[rbx_routers], subnets=[ipv6_subnet_rbx, ipv4_subnet_rbx])
+        self.addSubnet(nodes=[sbg_routers], subnets=[ipv6_subnet_sbg, ipv4_subnet_sbg])
+        self.addSubnet(nodes=[par_routers], subnets=[ipv6_subnet_fra, ipv4_subnet_par])
 
         # Hosts
         telia_host = self.addHost("telia_host")
