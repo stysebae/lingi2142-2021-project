@@ -14,12 +14,10 @@ import ipmininet
 from ipmininet.cli import IPCLI
 from ipmininet.ipnet import IPNet
 from ipmininet.iptopo import IPTopo
-from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, SHARE, AF_INET6, AF_INET, OSPF6, AccessList, \
-    bgp_peering, bgp_fullmesh, RouterConfig
-from ipmininet.router.config.bgp import rm_setup, ebgp_Client, ebgp_Peer, ibgp_Inter_Region
-from ipmininet.router.config.zebra import AccessListEntry, DENY, PERMIT
-from ipmininet.host.config import Named, ARecord, PTRRecord, AAAARecord
+from ipmininet.router.config import OSPF, BGP, set_rr, ebgp_session, AF_INET6, AF_INET, OSPF6, RouterConfig
+from ipmininet.host.config import Named, PTRRecord
 from ipaddress import ip_address
+
 from ip_addresses import IPv4Address, IPv6Address
 
 # CONSTANT VALUES
