@@ -371,7 +371,7 @@ class OVHTopology(IPTopo):
 if __name__ == '__main__':
     ipmininet.DEBUG_FLAG = True
     lg.setLogLevel("info")
-    net = IPNet(topo=OVHTopology(), use_v4=False, use_v6=True, allocate_IPs=False)
+    net = IPNet(topo=OVHTopology(), use_v4=True, use_v6=True, allocate_IPs=False)
     try:
         net.start()
         IPCLI(net)

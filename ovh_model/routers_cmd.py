@@ -10,6 +10,7 @@ This file executes automatically FRRouting commands in order to configure router
 
 import pexpect
 from os import sys
+from main import GOOGLE_AS, TELIA_AS, LEVEL3_AS, COGENT_AS, OVH_AS
 
 child = None
 
@@ -70,47 +71,66 @@ def set_password_routers(routers, ip, as_nbr, password):
     set_password(routers[1], ip[1], as_nbr[1], password)
 
 def advertise_google():
-    child.sendline("google_r1 telnet localhost 2605")
+    child.sendline("google telnet localhost 2605")
     send_command("zebra")
-    child.expect("google_r1>")
+    child.expect("google>")
     send_command("enable")
-    child.expect("google_r1#")
+    child.expect("google#")
     send_command("configure terminal")
 
-    send_command("router bgp 5")
-    send_command("network 8.8.8.0 mask 255.255.255.0")
-    send_command("network 192.33.4.0 mask 255.255.255.0")
-    send_command("network 192.112.36.0 mask 255.255.255.0")
+    send_command("router bgp {}".format(GOOGLE_AS))
+    send_command("address-family ipv6")
+    send_command("network 2001:4860::/32")
+    send_command("network 2404:6800::/32")
+    send_command("network 2404:f340::/32")
 
     send_command("end")
     send_command("exit")
     child.expect("mininet>")
 
 def advertise_cogent():
-    child.sendline("cogent_r1 telnet localhost 2605")
+    child.sendline("cogent telnet localhost 2605")
     send_command("zebra")
-    child.expect("cogent_r1>")
+    child.expect("cogent>")
     send_command("enable")
-    child.expect("cogent_r1#")
+    child.expect("cogent#")
     send_command("configure terminal")
 
-    send_command("router bgp 3")
-    send_command("network 98.159.96.0 mask 255.255.252.0")
+    send_command("router bgp {}".format(COGENT_AS))
+    send_command("address-family ipv6")
+    send_command("network 2001:550:1:100::/56")
 
     send_command("end")
     send_command("exit")
     child.expect("mininet>")
 
 def advertise_level3():
-    child.sendline("level3_r1 telnet localhost 2605")
+    child.sendline("level3 telnet localhost 2605")
     send_command("zebra")
-    child.expect("level3_r1>")
+    child.expect("level3>")
     send_command("enable")
-    child.expect("level3_r1#")
+    child.expect("level3#")
     send_command("configure terminal")
 
-    send_command("router bgp 4")
-    send_command("network 99.193.251.0 mask 255.255.255.0")
+    send_command("router bgp {}".format(LEVEL3_AS))
+    send_command("address-family ipv6")
+    send_command("network 2620:123:d001::/48")
+
+    send_command("end")
+    send_command("exit")
+    child.expect("mininet>")
+
+def advertise_telia():
+    child.sendline("telia telnet localhost 2605")
+    send_command("zebra")
+    child.expect("telia>")
+    send_command("enable")
+    child.expect("telia#")
+    send_command("configure terminal")
+
+    send_command("router bgp {}".format(TELIA_AS))
+    send_command("address-family ipv6")
+    send_command("network 2a0e:1c80:a::/48")
 
     send_command("end")
     send_command("exit")
@@ -122,23 +142,24 @@ if __name__ == "__main__":
     child.expect("mininet>")
     print("Please wait for a second 'mininet>' to appears")
     child.logfile_read = None
-    deny_reserved_addresses("ovh_r11", "12.11.0.53", 1) # google
-    deny_reserved_addresses("ovh_r11", "12.11.0.49", 1) # level3
-    deny_reserved_addresses("ovh_r11", "12.11.0.51", 1) # cogent
-    deny_reserved_addresses("ovh_r5", "12.11.0.25", 1) # telia
-    deny_reserved_addresses("ovh_r6", "12.11.0.27", 1) # telia
-    deny_reserved_addresses("ovh_r6", "12.11.0.29", 1) # level3
+    deny_reserved_addresses("par_gsw", "12.16.217.53", OVH_AS) # google
+    deny_reserved_addresses("par_gsw", "12.16.217.49", OVH_AS) # level3
+    deny_reserved_addresses("par_gsw", "12.16.217.51", OVH_AS) # cogent
+    deny_reserved_addresses("fra_1", "12.16.217.25", OVH_AS) # telia
+    deny_reserved_addresses("fra_5", "12.16.217.27", OVH_AS) # telia
+    deny_reserved_addresses("fra_5", "12.16.217.29", OVH_AS) # level3
 
-    set_password_routers(["ovh_r11", "google_r1"], ["12.11.0.53", "12.11.0.52"], [1, 5], "aaa") # ovh_r11 <-> google_r1
-    set_password_routers(["ovh_r11", "level3_r1"], ["12.11.0.49", "12.11.0.48"], [1, 4], "bbb") # ovh_r11 <-> level3_r1
-    set_password_routers(["ovh_r11", "cogent_r1"], ["12.11.0.51", "12.11.0.50"], [1, 3], "ccc") # ovh_r11 <-> cogent_r1
-    set_password_routers(["ovh_r5", "telia_r1"], ["12.11.0.25", "12.11.0.24"], [1, 2], "ddd") # ovh_r5 <-> telia_r1
-    set_password_routers(["ovh_r6", "telia_r1"], ["12.11.0.27", "12.11.0.26"], [1, 2], "eee") # ovh_r6 <-> telia_r1
-    set_password_routers(["ovh_r6", "level3_r1"], ["12.11.0.29", "12.11.0.28"], [1, 4], "fff") # ovh_r6 <-> level3_r1
+    set_password_routers(["par_gsw", "google"], ["12.16.217.53", "12.16.217.52"], [OVH_AS, GOOGLE_AS], "aaa") # par_gsw <-> google
+    set_password_routers(["par_gsw", "level3"], ["12.16.217.49", "12.16.217.48"], [OVH_AS, LEVEL3_AS], "bbb") # par_gsw <-> level3
+    set_password_routers(["par_gsw", "cogent"], ["12.16.217.51", "12.16.217.50"], [OVH_AS, COGENT_AS], "ccc") # par_gsw <-> cogent
+    set_password_routers(["fra_1", "telia"], ["12.16.217.25", "12.16.217.24"], [OVH_AS, TELIA_AS], "ddd") # fra_1 <-> telia
+    set_password_routers(["fra_5", "telia"], ["12.16.217.27", "12.16.217.26"], [OVH_AS, TELIA_AS], "eee") # fra_5 <-> telia
+    set_password_routers(["fra_5", "level3"], ["12.16.217.29", "12.16.217.28"], [OVH_AS, LEVEL3_AS], "fff") # fra_5 <-> level3
 
     advertise_google()
     advertise_cogent()
     advertise_level3()
+    advertise_telia()
 
     child.interact()
 
