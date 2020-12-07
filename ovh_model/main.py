@@ -328,7 +328,7 @@ class OVHTopology(IPTopo):
                         ns_domain_name=DOMAIN, records=[ptr_record_ipv6])
         super().build(*args, **kwargs)
 
-    def add_physical_link(self, router1, router2, ip_addr_routers, igp_cost_value=1, hello_timer=5, dead_timer=20):
+    def add_physical_link(self, router1, router2, ip_addr_routers, igp_cost_value=1, hello_timer=3, dead_timer=12):
         """
         Add a physical link with IPv4 and IPv6 addresses on interface parameters between two given routers.
 
