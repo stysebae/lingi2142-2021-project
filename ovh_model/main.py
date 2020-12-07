@@ -50,26 +50,26 @@ class OVHTopology(IPTopo):
         """
         # TODO: check IPv6 addresses
         # Adding routers
-        fra1_lim1_g1 = self.addRouter("fra1_lim1_g1",
-                                      config=RouterConfig,
-                                      lo_addresses=[IPv6Address("2023", "a", "c", "0", "0", "0", "0", "1",
-                                                                IPV6_LO_PREFIX).__str__(),
-                                                    IPv4Address(12, 16, 216, 1, IPV4_LO_PREFIX).__str__()])
-        fra1_lim1_g2 = self.addRouter("fra1_lim1_g2",
-                                      config=RouterConfig,
-                                      lo_addresses=[IPv6Address("2023", "a", "c", "0", "0", "0", "0", "2",
-                                                                IPV6_LO_PREFIX).__str__(),
-                                                    IPv4Address(12, 16, 216, 2, IPV4_LO_PREFIX).__str__()])
-        fra_fr5_sbb1 = self.addRouter("fra_fr5_sbb1",
-                                      config=RouterConfig,
-                                      lo_addresses=[IPv6Address("2023", "a", "c", "0", "0", "0", "0", "3",
-                                                                IPV6_LO_PREFIX).__str__(),
-                                                    IPv4Address(12, 16, 216, 3, IPV4_LO_PREFIX).__str__()])
-        fra_fr5_sbb2 = self.addRouter("fra_fr5_sbb2",
-                                      config=RouterConfig,
-                                      lo_addresses=[IPv6Address("2023", "a", "c", "0", "0", "0", "0", "4",
-                                                                IPV6_LO_PREFIX).__str__(),
-                                                    IPv4Address(12, 16, 216, 4, IPV4_LO_PREFIX).__str__()])
+        fra1_g1 = self.addRouter("fra1_g1",
+                                 config=RouterConfig,
+                                 lo_addresses=[IPv6Address("2023", "a", "c", "0", "0", "0", "0", "1",
+                                                           IPV6_LO_PREFIX).__str__(),
+                                               IPv4Address(12, 16, 216, 1, IPV4_LO_PREFIX).__str__()])
+        fra1_g2 = self.addRouter("fra1_g2",
+                                 config=RouterConfig,
+                                 lo_addresses=[IPv6Address("2023", "a", "c", "0", "0", "0", "0", "2",
+                                                            IPV6_LO_PREFIX).__str__(),
+                                               IPv4Address(12, 16, 216, 2, IPV4_LO_PREFIX).__str__()])
+        fra_sbb1 = self.addRouter("fra_sbb1",
+                                  config=RouterConfig,
+                                  lo_addresses=[IPv6Address("2023", "a", "c", "0", "0", "0", "0", "3",
+                                                            IPV6_LO_PREFIX).__str__(),
+                                                IPv4Address(12, 16, 216, 3, IPV4_LO_PREFIX).__str__()])
+        fra_sbb2 = self.addRouter("fra_sbb2",
+                                  config=RouterConfig,
+                                  lo_addresses=[IPv6Address("2023", "a", "c", "0", "0", "0", "0", "4",
+                                                            IPV6_LO_PREFIX).__str__(),
+                                                IPv4Address(12, 16, 216, 4, IPV4_LO_PREFIX).__str__()])
         fra_1 = self.addRouter("fra_1",
                                config=RouterConfig,
                                lo_addresses=[IPv6Address("2023", "a", "c", "0", "0", "0", "0", "5",
@@ -112,50 +112,52 @@ class OVHTopology(IPTopo):
                                                IPv4Address(12, 16, 216, 12, IPV4_LO_PREFIX).__str__()])
         telia = self.addRouter("telia",
                                config=RouterConfig,
-                               lo_addresses=[IPv6Address("2023", "a", "5", "0", "0", "0", "0", "1",
+                               lo_addresses=[IPv6Address("2299", "a", "5", "0", "0", "0", "0", "1",
                                                          IPV6_LO_PREFIX).__str__(),
                                              IPv4Address(123, 3, 2, 1, IPV4_LO_PREFIX).__str__()])
         google = self.addRouter("google",
                                 config=RouterConfig,
-                                lo_addresses=[IPv6Address("2023", "a", "6", "0", "0", "0", "0", "1",
+                                lo_addresses=[IPv6Address("2169", "a", "6", "0", "0", "0", "0", "1",
                                                           IPV6_LO_PREFIX).__str__(),
                                               IPv4Address(124, 3, 2, 1, IPV4_LO_PREFIX).__str__()])
         cogent = self.addRouter("cogent",
                                 config=RouterConfig,
-                                lo_addresses=[IPv6Address("2023", "a", "7", "0", "0", "0", "0", "1",
+                                lo_addresses=[IPv6Address("2174", "a", "7", "0", "0", "0", "0", "1",
                                                           IPV6_LO_PREFIX).__str__(),
                                               IPv4Address(125, 3, 2, 1, IPV4_LO_PREFIX).__str__()])
         level3 = self.addRouter("level3",
                                 config=RouterConfig,
-                                lo_addresses=[IPv6Address("2023", "a", "8", "0", "0", "0", "0", "1",
+                                lo_addresses=[IPv6Address("2356", "a", "8", "0", "0", "0", "0", "1",
                                                           IPV6_LO_PREFIX).__str__(),
                                               IPv4Address(126, 3, 2, 1, IPV4_LO_PREFIX).__str__()])
-        all_routers = [fra1_lim1_g1, fra1_lim1_g2, fra_fr5_sbb1, fra_fr5_sbb2, fra_1, fra_5, rbx_g1, rbx_g2, sbg_g1,
+        all_routers = [fra1_g1, fra1_g2, fra_sbb1, fra_sbb2, fra_1, fra_5, rbx_g1, rbx_g2, sbg_g1,
                        sbg_g2, par_th2, par_gsw, telia, google, cogent, level3]
-        fra_routers = [fra1_lim1_g1, fra1_lim1_g2, fra_fr5_sbb1, fra_fr5_sbb2, fra_1, fra_5]  # In Frankfurt
+        fra_routers = [fra1_g1, fra1_g2, fra_sbb1, fra_sbb2, fra_1, fra_5]  # In Frankfurt
         rbx_routers = [rbx_g1, rbx_g2]  # In Roubaix
         sbg_routers = [sbg_g1, sbg_g2]  # In Strasbourg
         par_routers = [par_th2, par_gsw]  # In Paris
         ovh_routers = fra_routers + rbx_routers + sbg_routers + par_routers
 
         # Hosts
-        telia_host = self.addHost("telia_host")
-        self.addLink(telia_host, telia)
-        google_host = self.addHost("google_host")
-        self.addLink(google_host, google)
-        cogent_host = self.addHost("cogent_host")
-        self.addLink(cogent_host, cogent)
-        level3_host = self.addHost("level3_host")
-        self.addLink(level3_host, level3)
-        sbg_webserver = self.addHost("sbg_webserver")  # for anycast
-        self.addLink(sbg_webserver, sbg_g2)
+        telia_h = self.addHost("telia_h")
+        self.addLink(telia_h, telia)
+        google_h = self.addHost("google_h")
+        self.addLink(google_h, google)
+        cogent_h = self.addHost("cogent_h")
+        self.addLink(cogent_h, cogent)
+        level3_h = self.addHost("level3_h")
+        self.addLink(level3_h, level3)
+        sbg_web = self.addHost("sbg_web")  # for anycast
+        self.addLink(sbg_web, sbg_g2)
         # TODO: change to Router (in order to set a loopback address)
-        fra_dns_resolver = self.addHost("fra_dns_resolver")
-        self.addLink(fra_dns_resolver, fra_fr5_sbb2)
-        rbx_dns_resolver = self.addHost("rbx_dns_resolver")
-        self.addLink(rbx_dns_resolver, rbx_g1)
+        fra_server = self.addHost("fra_server")
+        self.addLink(fra_server, fra_sbb2)
+        rbx_server = self.addHost("rbx_server")
+        self.addLink(rbx_server, rbx_g1)
 
         # Subnets
+        #TODO: change IP addresses?
+        """
         ipv4_subnet_fra = IPv4Address(12, 16, 218, 0, IPV4_SUBNET_PREFIX).__str__()
         ipv6_subnet_fra = IPv6Address("2023", "c", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
         ipv4_subnet_rbx = IPv4Address(12, 16, 218, 2, IPV4_SUBNET_PREFIX).__str__()
@@ -164,65 +166,59 @@ class OVHTopology(IPTopo):
         ipv6_subnet_sbg = IPv6Address("2023", "e", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
         ipv4_subnet_par = IPv4Address(12, 16, 218, 6, IPV4_SUBNET_PREFIX).__str__()
         ipv6_subnet_fra = IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
-        self.addSubnet(nodes=[fra_routers], subnets=[ipv6_subnet_fra, ipv4_subnet_fra])
-        self.addSubnet(nodes=[fra_routers], subnets=[ipv6_subnet_fra, ipv4_subnet_fra])
-        self.addSubnet(nodes=[rbx_routers], subnets=[ipv6_subnet_rbx, ipv4_subnet_rbx])
-        self.addSubnet(nodes=[sbg_routers], subnets=[ipv6_subnet_sbg, ipv4_subnet_sbg])
-        self.addSubnet(nodes=[par_routers], subnets=[ipv6_subnet_fra, ipv4_subnet_par])
-        # TODO: change the IP addresses
+
+        self.addSubnet(nodes=[google, google_h], subnets=[IPv6Address("2169", "a", "6", "0", "0", "0", "0", "1",
+                                                                      IPV6_SUBNET_PREFIX).__str__(),
+                                                          IPv4Address(124, 3, 2, 1, 24).__str__()])
+        self.addSubnet(nodes=[telia, telia_h], subnets=[IPv6Address("2299", "a", "5", "0", "0", "0", "0", "1",
+                                                                    IPV6_SUBNET_PREFIX).__str__(),
+                                                        IPv4Address(123, 3, 2, 1, 24).__str__()])
+        self.addSubnet(nodes=[cogent, cogent_h], subnets=[IPv6Address("2174", "a", "7", "0", "0", "0", "0", "1",
+                                                                      IPV6_SUBNET_PREFIX).__str__(),
+                                                          IPv4Address(125, 3, 2, 1, 24).__str__()])
+        self.addSubnet(nodes=[level3, level3_h], subnets=[IPv6Address("2356", "a", "8", "0", "0", "0", "0", "1",
+                                                                      IPV6_SUBNET_PREFIX).__str__(),
+                                                          IPv4Address(125, 3, 2, 1, 24).__str__()])
+
+        #self.addSubnet(nodes=[fra_sbb2, fra_server], subnets=[ipv6_subnet_fra, ipv4_subnet_fra])
+        #self.addSubnet(nodes=[rbx_g1, rbx_server], subnets=[ipv6_subnet_rbx, ipv4_subnet_rbx])
         """
-        self.addSubnet(nodes=[google, google_host], subnets=[IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", 
-                                                                         IPV6_SUBNET_PREFIX).__str__(), 
-                                                             IPv4Address(8, 8, 4, 0, 24).__str__()])
-        self.addSubnet(nodes=[telia, telia_host], subnets=[IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", 
-                                                                       IPV6_SUBNET_PREFIX).__str__(), 
-                                                           IPv4Address(8, 8, 4, 0, 24).__str__()])
-        self.addSubnet(nodes=[cogent, cogent_host], subnets=[IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", 
-                                                                         IPV6_SUBNET_PREFIX).__str__(), 
-                                                             IPv4Address(8, 8, 4, 0, 24).__str__()])
-        self.addSubnet(nodes=[level3, level3_host], subnets=[IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", 
-                                                                         IPV6_SUBNET_PREFIX).__str__(), 
-                                                             IPv4Address(8, 8, 4, 0, 24).__str__()])
-        """
-        # TODO: check if it is okay
-        self.addSubnet(nodes=[fra_fr5_sbb2, fra_dns_resolver], subnets=[ipv6_subnet_fra, ipv4_subnet_fra])
-        self.addSubnet(nodes=[rbx_g1, rbx_dns_resolver], subnets=[ipv6_subnet_rbx, ipv4_subnet_rbx])
 
         # Adding physical links
-        self.add_physical_link(fra1_lim1_g1, fra1_lim1_g2,
+        self.add_physical_link(fra1_g1, fra1_g2,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "0", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 0, IPV4_LINK_PREFIX)))
-        self.add_physical_link(fra1_lim1_g1, fra_fr5_sbb1,
+        self.add_physical_link(fra1_g1, fra_sbb1,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 2, IPV4_LINK_PREFIX)))
-        self.add_physical_link(fra1_lim1_g2, fra_fr5_sbb2,
+        self.add_physical_link(fra1_g2, fra_sbb2,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "4", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 4, IPV4_LINK_PREFIX)))
-        self.add_physical_link(fra_fr5_sbb1, fra_fr5_sbb2,
+        self.add_physical_link(fra_sbb1, fra_sbb2,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "6", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 6, IPV4_LINK_PREFIX)))
-        self.add_physical_link(fra_fr5_sbb1, fra_5,
+        self.add_physical_link(fra_sbb1, fra_5,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "8", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 8, IPV4_LINK_PREFIX)))
-        self.add_physical_link(fra_fr5_sbb1, fra_1,
+        self.add_physical_link(fra_sbb1, fra_1,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "a", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 10, IPV4_LINK_PREFIX)))
-        self.add_physical_link(fra_fr5_sbb1, sbg_g1,
+        self.add_physical_link(fra_sbb1, sbg_g1,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "b", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 12, IPV4_LINK_PREFIX)), igp_cost_value=2)
-        self.add_physical_link(fra_fr5_sbb1, rbx_g1,
+        self.add_physical_link(fra_sbb1, rbx_g1,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "c", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 14, IPV4_LINK_PREFIX)), igp_cost_value=5)
-        self.add_physical_link(fra_fr5_sbb2, fra_1,
+        self.add_physical_link(fra_sbb2, fra_1,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "10", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 16, IPV4_LINK_PREFIX)))
-        self.add_physical_link(fra_fr5_sbb2, fra_5,
+        self.add_physical_link(fra_sbb2, fra_5,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "12", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 18, IPV4_LINK_PREFIX)))
-        self.add_physical_link(fra_fr5_sbb2, rbx_g2,
+        self.add_physical_link(fra_sbb2, rbx_g2,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "14", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 20, IPV4_LINK_PREFIX)), igp_cost_value=5)
-        self.add_physical_link(fra_fr5_sbb2, sbg_g2,
+        self.add_physical_link(fra_sbb2, sbg_g2,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "16", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 22, IPV4_LINK_PREFIX)), igp_cost_value=2)
         self.add_physical_link(fra_1, telia,
@@ -270,13 +266,13 @@ class OVHTopology(IPTopo):
         self.add_physical_link(par_gsw, google,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "34", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 52, IPV4_LINK_PREFIX)), igp_cost_value=2)
-        self.add_physical_link(rbx_g1, fra_dns_resolver,
+        self.add_physical_link(rbx_g1, fra_server,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 54, IPV4_LINK_PREFIX)))
-        self.add_physical_link(fra_fr5_sbb2, rbx_dns_resolver,
+        self.add_physical_link(fra_sbb2, rbx_server,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 54, IPV4_LINK_PREFIX)))
-        self.add_physical_link(sbg_g2, sbg_webserver,
+        self.add_physical_link(sbg_g2, sbg_web,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 56, IPV4_LINK_PREFIX)))
 
@@ -292,7 +288,7 @@ class OVHTopology(IPTopo):
 
         # Adding AS ownerships
         self.addAS(OVH_AS,
-                   (fra1_lim1_g1, fra1_lim1_g2, fra_fr5_sbb1, fra_fr5_sbb2, fra_1, fra_5, rbx_g1, rbx_g2, sbg_g1,
+                   (fra1_g1, fra1_g2, fra_sbb1, fra_sbb2, fra_1, fra_5, rbx_g1, rbx_g2, sbg_g1,
                     par_th2, par_gsw, sbg_g2))
         self.addAS(TELIA_AS, (telia,))
         self.addAS(COGENT_AS, (cogent,))
@@ -300,13 +296,13 @@ class OVHTopology(IPTopo):
         self.addAS(GOOGLE_AS, (google,))
 
         # Configuring RRs/iBGP sessions
-        peers_fra_fr5_sbb1 = peers_fra_5 = [fra1_lim1_g1, fra1_lim1_g2, fra_fr5_sbb2, fra_1]
+        peers_fra_fr5_sbb1 = peers_fra_5 = [fra1_g1, fra1_g2, fra_sbb2, fra_1]
         peers_rbx_g1 = peers_rbx_g2 = [sbg_g1, par_th2, par_gsw, sbg_g2]
-        set_rr(self, rr=fra_fr5_sbb1, peers=peers_fra_fr5_sbb1)
+        set_rr(self, rr=fra_sbb1, peers=peers_fra_fr5_sbb1)
         set_rr(self, rr=fra_5, peers=peers_fra_5)
         set_rr(self, rr=rbx_g1, peers=peers_rbx_g1)
         set_rr(self, rr=rbx_g2, peers=peers_rbx_g2)
-        self.addiBGPFUllMesh(16276, routers=[fra_fr5_sbb1, fra_5, rbx_g1, rbx_g2])  # 4*3/2 iBGP sessions
+        self.addiBGPFullMesh(16276, routers=[fra_sbb1, fra_5, rbx_g1, rbx_g2])  # 4*3/2 iBGP sessions
 
         # Adding eBGP sessions
         ebgp_session(self, fra_1, telia)
@@ -320,15 +316,15 @@ class OVHTopology(IPTopo):
 
         # DNS anycast
         # TODO: to check
-        fra_dns_resolver.addDaemon(Named)
-        rbx_dns_resolver.addDaemon(Named)
-        self.addDNSZone(name=DOMAIN, dns_master=fra_dns_resolver, dns_slaves=[rbx_dns_resolver],
-                        nodes=[sbg_webserver])
+        fra_server.addDaemon(Named)
+        rbx_server.addDaemon(Named)
+        self.addDNSZone(name=DOMAIN, dns_master=fra_server, dns_slaves=[rbx_server],
+                        nodes=[sbg_web])
         reverse_domain_name_ipv6 = ip_address("2023::").reverse_pointer[-10:]  # adding a missing PTR record
         ptr_record_ipv6 = PTRRecord(
             IPv6Address("2023", "b", "0", "0", "0", "0", "0", "38", IPV6_LINK_PREFIX).__str__()[:-4],
-            sbg_webserver + f".{DOMAIN}")
-        self.addDNSZone(name=reverse_domain_name_ipv6, dns_master=fra_dns_resolver, dns_slaves=[rbx_dns_resolver],
+            sbg_web + f".{DOMAIN}")
+        self.addDNSZone(name=reverse_domain_name_ipv6, dns_master=fra_server, dns_slaves=[rbx_server],
                         ns_domain_name=DOMAIN, records=[ptr_record_ipv6])
         super().build(*args, **kwargs)
 
