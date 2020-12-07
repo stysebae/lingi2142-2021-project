@@ -37,6 +37,18 @@ COGENT_AS = 174
 LEVEL3_AS = 3356
 TELIA_AS = 1299
 
+SUBNETS_IPV4 =   {"fra1_g1": "12.16.218.0/30", "fra1_g2": "12.16.218.4/30", "fra_sbb1": "12.16.218.8/30", "fra_sbb2": "12.16.218.12/30", "fra_1": "12.16.218.16/30", "fra_5": "12.16.218.20/30",
+            "rbx_g1": "12.16.218.32/30", "rbx_g2": "12.16.218.36/30",
+            "sbg_g1": "12.16.218.64/30", "sbg_g2": "12.16.218.68/30",
+            "par_th2": "12.16.218.96/30", "par_gsw": "12.16.218.100/30",
+            "telia": "123.3.2.0/30", "cogent": "125.3.2.0/30", "google": "124.3.2.0/30", "level3": "126.3.2.0/30"}
+
+SUBNETS_IPV6 =   {"fra1_g1": "2023:c:1::/48", "fra1_g2": "2023:c:2::/48", "fra_sbb1": "2023:c:3::/48", "fra_sbb2": "2023:c:4::/48", "fra_1": "2023:c:5::/48", "fra_5": "2023:c:6::/48",
+            "rbx_g1": "2023:d:1::/48", "rbx_g2": "2023:d:2::/48",
+            "sbg_g1": "2023:e:1::/48", "sbg_g2": "2023:e:2::/48",
+            "par_th2": "2023:f:1::/48", "par_gsw": "2023:f:2::/48",
+            "telia": "2028:a:1::/48", "cogent": "2029:a:1::/48", "google": "2019:a:1::/48", "level3": "2020:a:1::/48"}
+
 class RouterDesc(RouterDescription):
     def addInterfaceSupport(self):
         self.i = RouterInterfaces(self.__str__())
@@ -78,6 +90,9 @@ class OVHTopology(IPTopo):
         router = super().addRouter(router_name, config=RouterConfig, lo_addresses=lo_addresses)
         router.__class__ = RouterDesc
         router.addInterfaceSupport()
+        host = self.addHost("h_{}".format(router_name))
+        l = self.addLink(router, host)
+        self.addSubnet(links=[l], subnets=[SUBNETS_IPV6[router_name], SUBNETS_IPV4[router_name]])
         return router
 
     def build(self, *args, **kwargs):
@@ -127,15 +142,6 @@ class OVHTopology(IPTopo):
         par_routers = [par_th2, par_gsw]  # In Paris
         ovh_routers = fra_routers + rbx_routers + sbg_routers + par_routers
 
-        # Hosts
-        telia_h = self.addHost("telia_h")
-        self.addLink(telia_h, telia)
-        google_h = self.addHost("google_h")
-        self.addLink(google_h, google)
-        cogent_h = self.addHost("cogent_h")
-        self.addLink(cogent_h, cogent)
-        level3_h = self.addHost("level3_h")
-        self.addLink(level3_h, level3)
         sbg_web = self.addHost("sbg_web")  # for anycast
         self.addLink(sbg_web, sbg_g2)
         # TODO: change to Router (in order to set a loopback address)
