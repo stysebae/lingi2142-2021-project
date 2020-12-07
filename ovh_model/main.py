@@ -144,35 +144,6 @@ class OVHTopology(IPTopo):
         rbx_server = self.addHost("rbx_server")
         self.addLink(rbx_server, rbx_g1)
 
-        # Subnets
-        #TODO: change IP addresses?
-        """
-        ipv4_subnet_fra = IPv4Address(12, 16, 218, 0, IPV4_SUBNET_PREFIX).__str__()
-        ipv6_subnet_fra = IPv6Address("2023", "c", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
-        ipv4_subnet_rbx = IPv4Address(12, 16, 218, 2, IPV4_SUBNET_PREFIX).__str__()
-        ipv6_subnet_rbx = IPv6Address("2023", "d", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
-        ipv4_subnet_sbg = IPv4Address(12, 16, 218, 4, IPV4_SUBNET_PREFIX).__str__()
-        ipv6_subnet_sbg = IPv6Address("2023", "e", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
-        ipv4_subnet_par = IPv4Address(12, 16, 218, 6, IPV4_SUBNET_PREFIX).__str__()
-        ipv6_subnet_fra = IPv6Address("2023", "f", "0", "0", "0", "0", "0", "0", IPV6_SUBNET_PREFIX).__str__()
-
-        self.addSubnet(nodes=[google, google_h], subnets=[IPv6Address("2169", "a", "6", "0", "0", "0", "0", "1",
-             IPV6_SUBNET_PREFIX).__str__(),
- IPv4Address(124, 3, 2, 1, 24).__str__()])
-        self.addSubnet(nodes=[telia, telia_h], subnets=[IPv6Address("2299", "a", "5", "0", "0", "0", "0", "1",
-           IPV6_SUBNET_PREFIX).__str__(),
-                                                        IPv4Address(123, 3, 2, 1, 24).__str__()])
-        self.addSubnet(nodes=[cogent, cogent_h], subnets=[IPv6Address("2174", "a", "7", "0", "0", "0", "0", "1",
-             IPV6_SUBNET_PREFIX).__str__(),
- IPv4Address(125, 3, 2, 1, 24).__str__()])
-        self.addSubnet(nodes=[level3, level3_h], subnets=[IPv6Address("2356", "a", "8", "0", "0", "0", "0", "1",
-             IPV6_SUBNET_PREFIX).__str__(),
- IPv4Address(125, 3, 2, 1, 24).__str__()])
-
-        #self.addSubnet(nodes=[fra_sbb2, fra_server], subnets=[ipv6_subnet_fra, ipv4_subnet_fra])
-        #self.addSubnet(nodes=[rbx_g1, rbx_server], subnets=[ipv6_subnet_rbx, ipv4_subnet_rbx])
-        """
-
         # Adding physical links
         self.add_physical_link(fra1_g1, fra1_g2,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "0", IPV6_LINK_PREFIX),
@@ -294,14 +265,6 @@ class OVHTopology(IPTopo):
         self.addiBGPFullMesh(16276, routers=[fra_sbb1, fra_5, rbx_g1, rbx_g2])  # 4*3/2 iBGP sessions
 
         # Adding eBGP sessions
-        """ebgp_session(self, fra_1, telia, link_type=CLIENT_PROVIDER)
-        ebgp_session(self, fra_5, telia, link_type=CLIENT_PROVIDER)
-        ebgp_session(self, fra_5, level3, link_type=CLIENT_PROVIDER)
-        ebgp_session(self, par_gsw, google, link_type=CLIENT_PROVIDER)
-        ebgp_session(self, par_gsw, cogent, link_type=CLIENT_PROVIDER)
-        ebgp_session(self, par_gsw, level3, link_type=CLIENT_PROVIDER)
-        ebgp_session(self, par_th2, cogent, link_type=CLIENT_PROVIDER)
-        ebgp_session(self, par_th2, google, link_type=CLIENT_PROVIDER)"""
         ebgp_session(self, telia, fra_1, link_type=CLIENT_PROVIDER)
         ebgp_session(self, telia, fra_5, link_type=CLIENT_PROVIDER)
         ebgp_session(self, level3, fra_5, link_type=CLIENT_PROVIDER)
