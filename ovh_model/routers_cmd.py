@@ -13,6 +13,7 @@ from os import sys
 from main import GOOGLE_AS, TELIA_AS, LEVEL3_AS, COGENT_AS, OVH_AS
 
 child = None
+OSPF_PASSWORD = "OVH"
 
 def send_command(command):
     child.sendline(command)
@@ -45,7 +46,27 @@ def deny_reserved_addresses(local_router, peer_router, as_nbr):
     send_command("neighbor {} prefix-list ipv4-martians out".format(peer_router))
     send_command("neighbor {} prefix-list too-specific in".format(peer_router))
     send_command("neighbor {} maximum-prefix 200".format(peer_router))
+    send_command("neighbor {} ttl-security hops 2".format(peer_router)) # We have access to all routers maximum 2 hops away
     send_command("neighbor {} remove-private-as".format(peer_router))
+
+    send_command("end")
+    send_command("exit")
+    child.expect("mininet>")
+
+def activate_ospf_password(local_router, nbr_interfaces, password):
+    child.sendline("{} telnet localhost ospfd".format(local_router))
+    send_command("zebra")
+    child.expect("{}>".format(local_router))
+    send_command("enable")
+    child.expect("{}#".format(local_router))
+
+    for i in range(nbr_interfaces):
+        send_command("configure terminal")
+        send_command("router ospf")
+        send_command("interface {}-eth{}".format(local_router, i))
+        send_command("ip ospf message-digest-key 1 md5 {}".format(password))
+        send_command("ip ospf authentication message-digest")
+        send_command("end")
 
     send_command("end")
     send_command("exit")
@@ -155,6 +176,19 @@ if __name__ == "__main__":
     set_password_routers(["fra_1", "telia"], ["12.16.217.25", "12.16.217.24"], [OVH_AS, TELIA_AS], "ddd") # fra_1 <-> telia
     set_password_routers(["fra_5", "telia"], ["12.16.217.27", "12.16.217.26"], [OVH_AS, TELIA_AS], "eee") # fra_5 <-> telia
     set_password_routers(["fra_5", "level3"], ["12.16.217.29", "12.16.217.28"], [OVH_AS, LEVEL3_AS], "fff") # fra_5 <-> level3
+
+    activate_ospf_password("fra1_g1", 3, OSPF_PASSWORD)
+    activate_ospf_password("fra1_g2", 3, OSPF_PASSWORD)
+    activate_ospf_password("fra_sbb1", 7, OSPF_PASSWORD)
+    activate_ospf_password("fra_sbb2", 9, OSPF_PASSWORD)
+    activate_ospf_password("fra_1", 4, OSPF_PASSWORD)
+    activate_ospf_password("fra_5", 5, OSPF_PASSWORD)
+    activate_ospf_password("rbx_g1", 6, OSPF_PASSWORD)
+    activate_ospf_password("rbx_g2", 4, OSPF_PASSWORD)
+    activate_ospf_password("sbg_g1", 4, OSPF_PASSWORD)
+    activate_ospf_password("sbg_g2", 6, OSPF_PASSWORD)
+    activate_ospf_password("par_th2", 6, OSPF_PASSWORD)
+    activate_ospf_password("par_gsw", 7, OSPF_PASSWORD)
 
     advertise_google()
     advertise_cogent()

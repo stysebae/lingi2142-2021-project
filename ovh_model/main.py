@@ -305,7 +305,7 @@ class OVHTopology(IPTopo):
         :param hello_timer: (int) Interval (timer) in seconds for the OSPF hello messages.
         :param dead_timer: (int) Interval (timer) in seconds for the OSPF dead messages.
         """
-        link = self.addLink(router1, router2, igp_cost=igp_cost_value)
+        link = self.addLink(router1, router2, igp_cost=igp_cost_value, password="{}-{}".format(router1.__str__(), router2.__str__()))
         ip_addr_router1, ip_addr_router2 = ip_addr_routers, ip_addr_routers
         link[router1].addParams(ip=(ip_addr_router1[0].__str__(), ip_addr_router1[1].__str__()))
         ip_addr_router2[0].set_host(ip_addr_router2[0].increment(7))
@@ -353,6 +353,8 @@ class OVHTopology(IPTopo):
                 if "_" not in interface.getPeerRouter(): # Check if it is a peer router
                     ovh_rules.append(Rule("-A INPUT -i {} -p 89 -j DROP".format(interface))) # Drop OSPF packets from other AS
                     ovh_rules.append(Rule("-A OUTPUT -o {} -p 89 -j DROP".format(interface))) # Drop OSPF packets to other AS
+                    # Accept 30 connections before limiting a 2 connections per second
+                    ovh_rules.append(Rule("-A INPUT -i {} -m limit --limit 2/s --limit-burst 30 -j ACCEPT".format(interface))) 
             router.addDaemon(IPTables, rules=ovh_rules)
             router.addDaemon(IP6Tables, rules=ovh_rules)
         # Other AS advertise specific prefixes
