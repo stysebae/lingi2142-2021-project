@@ -7,7 +7,7 @@ This is a part of the "Computer Networks: Configuration and Management" course (
 There are some folders included in this current directory:
 
 - `pcap`: You will find some `tcpdump` files used to test anycast DNS and to observe a reply from the server (even though the DNS requests which are sent are malformed by sending them via `netcat`);
-- `docs` contains some Markdown files about some aspects of the configuration of the network
+- `docs` contains some documents that we used during the project to check how the implementation works
 
 ## How to launch the project
 
