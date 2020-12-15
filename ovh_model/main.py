@@ -106,7 +106,6 @@ class OVHTopology(IPTopo):
         Build the topology of our OVH network and set up it by adding routers, links, protocols, setting up routers
         reflectors, etc.
         """
-        # TODO: check IPv6 addresses
         # Adding routers
         fra1_g1 = self.addRouter("fra1_g1",
                                  [IPv6Address("2023", "a", "c", "0", "0", "0", "0", "1", IPV6_LO_PREFIX).__str__(),
@@ -185,10 +184,10 @@ class OVHTopology(IPTopo):
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "a", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 10, IPV4_LINK_PREFIX)))
         self.add_physical_link(fra_sbb1, sbg_g1,
-                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "b", IPV6_LINK_PREFIX),
+                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "c", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 12, IPV4_LINK_PREFIX)), igp_cost_value=2)
         self.add_physical_link(fra_sbb1, rbx_g1,
-                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "c", IPV6_LINK_PREFIX),
+                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "e", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 14, IPV4_LINK_PREFIX)), igp_cost_value=5)
         self.add_physical_link(fra_sbb2, fra_1,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "10", IPV6_LINK_PREFIX),
@@ -209,10 +208,10 @@ class OVHTopology(IPTopo):
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1a", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 26, IPV4_LINK_PREFIX)))
         self.add_physical_link(fra_5, level3,
-                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1b", IPV6_LINK_PREFIX),
+                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1c", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 28, IPV4_LINK_PREFIX)))
         self.add_physical_link(rbx_g1, rbx_g2,
-                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1c", IPV6_LINK_PREFIX),
+                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "1e", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 30, IPV4_LINK_PREFIX)))
         self.add_physical_link(rbx_g1, par_th2,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "20", IPV6_LINK_PREFIX),
@@ -233,10 +232,10 @@ class OVHTopology(IPTopo):
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2a", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 42, IPV4_LINK_PREFIX)), igp_cost_value=2)
         self.add_physical_link(par_th2, cogent,
-                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2b", IPV6_LINK_PREFIX),
+                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2c", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 44, IPV4_LINK_PREFIX)))
         self.add_physical_link(par_gsw, sbg_g2,
-                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2c", IPV6_LINK_PREFIX),
+                               (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "2e", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 46, IPV4_LINK_PREFIX)), igp_cost_value=5)
         self.add_physical_link(par_gsw, level3,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "30", IPV6_LINK_PREFIX),
@@ -251,12 +250,6 @@ class OVHTopology(IPTopo):
         # Adding OSPF and BGP daemons to routers
         self.add_ospf(all_routers)
         self.add_bgp(ovh_routers, external_routers)
-
-        # OSPF Security
-        # TODO
-
-        # BGP Security
-        # TODO
 
         # Adding AS ownerships
         self.addAS(OVH_AS,
@@ -287,7 +280,6 @@ class OVHTopology(IPTopo):
         ebgp_session(self, google, par_th2, link_type=CLIENT_PROVIDER)
 
         # DNS anycast
-        # TODO
         sbg_web = self.addHost("sbg_web")
         fra_server = self.addRouter("fra_server", [IPv6Address("2023", "a", "c", "0", "0", "0", "0", "7",
                                                                IPV6_LO_PREFIX).__str__(),
@@ -295,20 +287,12 @@ class OVHTopology(IPTopo):
         rbx_server = self.addRouter("rbx_server", [IPv6Address("2023", "a", "c", "0", "0", "0", "0", "7",
                                                                IPV6_LO_PREFIX).__str__(),
                                                    IPv4Address(12, 16, 216, 13, IPV4_LO_PREFIX).__str__()])
-        fra_server.addDaemon(BGP, RouterConfig, address_families=(AF_INET(redistribute=("connected",)),
-                                                                  AF_INET6(redistribute=("connected",))))
-        rbx_server.addDaemon(BGP, RouterConfig, address_families=(AF_INET(redistribute=("connected",)),
-                                                                  AF_INET6(redistribute=("connected",))))
+        fra_server.addDaemon(BGP, address_families=(AF_INET(redistribute=("connected",)),
+                                                    AF_INET6(redistribute=("connected",))))
+        rbx_server.addDaemon(BGP, address_families=(AF_INET(redistribute=("connected",)),
+                                                    AF_INET6(redistribute=("connected",))))
         self.addAS(64512, (fra_server,))  # private ASN
-        self.addAS(64513, (rbx_server,))
-        link_rbx = self.addLink(rbx_g1, rbx_server)
-        link_fra = self.addLink(fra_sbb2, fra_server)
-        self.addLink(sbg_g2, sbg_web)
-        self.addSubnet(links=[link_rbx], subnets=[SUBNETS_IPV6["rbx_g1"], SUBNETS_IPV4["rbx_g1"]])
-        self.addSubnet(links=[link_fra], subnets=[SUBNETS_IPV6["fra_sbb2"], SUBNETS_IPV4["fra_sbb2"]])
-        ebgp_session(self, fra_sbb2, fra_server, link_type=CLIENT_PROVIDER)
-        ebgp_session(self, rbx_g1, rbx_server, link_type=CLIENT_PROVIDER)
-        """
+        self.addAS(64513, (rbx_server,))       
         self.add_physical_link(rbx_g1, rbx_server,
                                (IPv6Address("2023", "b", "0", "0", "0", "0", "0", "36", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 217, 54, IPV4_LINK_PREFIX)))
@@ -318,8 +302,10 @@ class OVHTopology(IPTopo):
         self.add_physical_link(sbg_g2, sbg_web,
                                (IPv6Address("2023", "e", "2", "0", "0", "0", "0", "3", IPV6_LINK_PREFIX),
                                 IPv4Address(12, 16, 218, 71, IPV4_LINK_PREFIX)))
-        """
-        """
+        
+        ebgp_session(self, fra_server, fra_sbb2, link_type=CLIENT_PROVIDER)
+        ebgp_session(self, rbx_server, rbx_g1, link_type=CLIENT_PROVIDER)
+        
         fra_server.addDaemon(Named)
         rbx_server.addDaemon(Named)
         self.addDNSZone(name=DOMAIN, dns_master=fra_server, dns_slaves=[rbx_server], nodes=[sbg_web])
@@ -330,7 +316,7 @@ class OVHTopology(IPTopo):
             sbg_web + f".{DOMAIN}")
         self.addDNSZone(name=reverse_domain_name_ipv6, dns_master=fra_server, dns_slaves=[rbx_server],
                         ns_domain_name=DOMAIN, records=[ptr_record_ipv6])
-        """
+        
         super().build(*args, **kwargs)
 
     def add_physical_link(self, router1, router2, ip_addr_routers, igp_cost_value=1, hello_timer=3, dead_timer=12):
@@ -346,6 +332,7 @@ class OVHTopology(IPTopo):
         """
         link = self.addLink(router1, router2, igp_cost=igp_cost_value, password="{}-{}".format(router1.__str__(), router2.__str__()))
         ip_addr_router1, ip_addr_router2 = ip_addr_routers, ip_addr_routers
+        router1_ips = (ip_addr_router1[0].__str__(), ip_addr_router1[1].__str__())
         link[router1].addParams(ip=(ip_addr_router1[0].__str__(), ip_addr_router1[1].__str__()))
         ip_addr_router2[0].set_host(ip_addr_router2[0].increment(7))
         ip_addr_router2[1].set_host(ip_addr_router2[1].get_fourth_byte() + 1)
@@ -354,6 +341,8 @@ class OVHTopology(IPTopo):
         link[router2].addParams(ospf_dead_int=dead_timer)
         link[router1].addParams(ospf_hello_int=hello_timer)
         link[router2].addParams(ospf_hello_int=hello_timer)
+        print("New link betwwen {} and {}: {} | {} <-> {} | {}".format( router1, router2, router1_ips[0], router1_ips[1],
+                                                                    ip_addr_router2[0].__str__(), ip_addr_router2[1].__str__()))
         if isinstance(router1, RouterDesc) and isinstance(router2, RouterDesc):  # If both are routers
             router1.interfaces().addInterface(router2.__str__())
             router2.interfaces().addInterface(router1.__str__())

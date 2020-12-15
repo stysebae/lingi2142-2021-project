@@ -145,7 +145,7 @@ class IPv6Address:
             else:
                 res = "a"
         except ValueError:
-            if value in {"a", "b"}:  # we only use "a" and "b" here since it is used for a link between 2 routers
+            if value in {"a", "b", "c", "d", "e", "f"}:
                 res = chr(ord(value) + 1)
             else:
                 res = str(0)

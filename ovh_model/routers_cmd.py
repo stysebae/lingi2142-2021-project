@@ -47,7 +47,7 @@ def deny_reserved_addresses(local_router, peer_router, as_nbr):
     send_command("neighbor {} prefix-list too-specific in".format(peer_router))
     send_command("neighbor {} maximum-prefix 200".format(peer_router))
     send_command("neighbor {} ttl-security hops 2".format(peer_router)) # We have access to all routers maximum 2 hops away
-    send_command("neighbor {} remove-private-as".format(peer_router))
+    send_command("neighbor {} remove-private-as replace-as".format(peer_router))
 
     send_command("end")
     send_command("exit")
